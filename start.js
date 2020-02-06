@@ -6,6 +6,11 @@ let game = null;
 
 let app = express();
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+    next();
+});
 
 app.post("/game/current", express.json(), (req, res) => {
     game = {
@@ -36,15 +41,5 @@ app.post("/game/current/player", express.json(), (req, res) => {
         else{res.status(403).send("too many players");}
     }
 });
-
-/*
-app.get("/", function(req, res) {
-    fs.readFile("index.html", function(error, buffer) {
-      if(error) {
-        return console.log("could not read menu-gen", error);
-      }
-      res.send(buffer.toString());
-    });
-  });*/
 
 app.listen(9423);

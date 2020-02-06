@@ -7,12 +7,29 @@ window.onload = function(){
         },
         body: JSON.stringify(data),
     })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log('Success:', data);
+    .then((response) => {
+        console.log(response)
     })
     .catch((error) => {
-        alert('Error:', error);
+        console.error('Error:', error);
     });
-    alert("hej");
 }
+// window.onload = async function() {
+//     const data = {name: "alexandra"};
+//     let response;
+//     try{
+//         response = await fetch('http://localhost:9423/game/current/player', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(data),
+//         });
+//     }
+//     catch(error){
+//         console.log(error);
+//     }
+//     console.log(response.status);
+//     console.log("hej")
+
+// }
