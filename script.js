@@ -1,19 +1,30 @@
-window.onload = function(){
-    const data = {name: "alexandra"};
+window.onload = async function(){
+    let status;
+    await fetch('http://localhost:9423/game/current')
+    .then((resp) => status = resp.status)
+    .catch((error) => { console.error('Error:', error); });
+    if(status == 200){
+        document.getElementById("newGame").style.display = "none";
+    }
+    else{
+        document.getElementById("joinGame").style.display = "none";
+    }
+}
+
+//add new player
+document.getElementById("joinGame").onclick = function(){
+    const player = {name: document.getElementById("name").value};
     fetch('http://localhost:9423/game/current/player', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(player)
     })
     .then((response) => {
-        console.log(response)
+
     })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+    .catch((error) => { console.error('Error:', error); });
 }
+
 // window.onload = async function() {
 //     const data = {name: "alexandra"};
 //     let response;
