@@ -30,6 +30,7 @@ document.getElementById("joinGame").onclick = function(){
 
     })
     .catch((error) => { console.error('Error:', error); });
+    
 }
 
 //create new game
