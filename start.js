@@ -23,10 +23,13 @@ app.post("/game/current", express.json(), (req, res) => {
 });
 
 app.get("/game/current", (req, res) => {
-    if(game == null){res.status(404).send("there is no game");}
-    else{
-        res.send(game);
+    if(game != null){
+        if(game.players.length <= 6){
+            res.send(game);
+        }
+        else{ res.status(403).send("too many players"); }
     }
+    else{ res.status(404).send("there is no game"); }
 });
 
 app.post("/game/current/player", express.json(), (req, res) => {
