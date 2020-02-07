@@ -25,6 +25,19 @@ document.getElementById("joinGame").onclick = function(){
     .catch((error) => { console.error('Error:', error); });
 }
 
+document.getElementById("newGame").onclick = function(){
+    const player = {name: document.getElementById("name").value};
+    fetch('http://localhost:9423/game/current', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(player)
+    })
+    .then((response) => {
+
+    })
+    .catch((error) => { console.error('Error:', error); });
+}
+
 // window.onload = async function() {
 //     const data = {name: "alexandra"};
 //     let response;
