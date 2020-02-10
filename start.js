@@ -17,10 +17,6 @@ app.post("/game/current", express.json(), (req, res) => {
         players: [],
         status: "initialized",
     };
-<<<<<<< HEAD
-
-=======
->>>>>>> f07e4ec1a1653406077644d699f25807cca88aa1
     game.players.push(req.body);
     game.status = "preround";
     res.send();
