@@ -30,7 +30,6 @@ document.getElementById("joinGame").onclick = function(){
 
     })
     .catch((error) => { console.error('Error:', error); });
-    
 }
 
 //create new game
@@ -64,5 +63,4 @@ document.getElementById("newGame").onclick = function(){
 //     }
 //     console.log(response.status);
 //     console.log("hej")
-
 // }
