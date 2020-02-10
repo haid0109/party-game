@@ -1,0 +1,14 @@
+body{
+    background: blue;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+input{
+    height: 3em;
+    width: 10em;
+    border-radius: 10px;
+    margin-top: 1em;
+    text-align: center;
+}

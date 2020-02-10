@@ -1,0 +1,18 @@
+#waitingRoom{
+    width: 80%;
+    background-color: #303C4B;
+    padding: 15px;
+    padding-top: 25px;
+    border-radius: 15px;
+}
+
+.columnWrapper{
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.column1, .column2{
+    width: 45%;
+}
