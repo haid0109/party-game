@@ -11,21 +11,32 @@
 </head>
 <body>
     <div id="waitingRoom">
-        <div class="columnwrapper">
-            <div class="column1">
-                player1
-                player2
-                player3
+        <h3>Waiting for players...</h3>
+        <div class="columnwrapper"> 
+            <div class="column1" id="col-1">
+                <!-- <div class="player-wrapper">
+                    <img src="" alt="">
+                    <div class="player-text">
+                        <p>player 1</p>
+                        <p>Haidar</p>     
+                    </div>                       
+                </div> -->                
+                
             </div>
             <div class="column2">
-                rule1
-                rule2
-                rule3
+                <h2>Rules</h2>
+                <p>Up to 7 players</p>
+                <p>The players will upload a soundfile each, which will then be added to the game</p>
+                <p>Each sound will be played once in a random order</p>
+                <p>The soundfile will be manipulated when played to be slower, faster etc...</p>
+                <p>The player will then have to guess what sound/music was just played from a mulitude of options</p>
+                <p>Once every soundfile has been played once the round ends, and result added to the highscore</p>
+                <p>They will then have a choice to begin another round or end the game</p>
             </div>
         </div>
-        <a href="">Start Game</a>    
+        <button onclick="window.location.href='/page2'">Begin first round</button>
     </div>
     
-    <script src="script.js"></script>
+    <script src="waiting.js"></script>
 </body>
 </html>
