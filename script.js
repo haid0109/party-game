@@ -19,30 +19,37 @@ window.onload = async function(){
 }
 
 //add new player
-document.getElementById("joinGame").onclick = function(){
+document.getElementById("joinGame").onclick = async function(){
+    event.preventDefault();
     const player = {name: document.getElementById("name").value};
-    fetch('http://localhost:9423/game/current/player', {
+    await fetch('http://localhost:9423/game/current/player', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(player)
     })
     .then((response) => {
-
+        window.location.href = "http://127.0.0.1:9033/waitingRoom.html"
     })
     .catch((error) => { console.error('Error:', error); });
     
 }
 
+document.getElementById("joinGameForm").submit = async function(event) {
+    event.preventDefault();
+};
+
 //create new game
-document.getElementById("newGame").onclick = function(){
-    const player = {name: document.getElementById("name").value};
-    fetch('http://localhost:9423/game/current', {
+document.getElementById("newGame").onclick = async function(event){
+    event.preventDefault();
+    let player = {name: document.getElementById("name").value };
+    await fetch('http://localhost:9423/game/current', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(player)
     })
     .then((response) => {
-
+        console.log(response)
+        window.location.href = "http://127.0.0.1:9033/waitingRoom.html"
     })
     .catch((error) => { console.error('Error:', error); });
 }
@@ -64,5 +71,7 @@ document.getElementById("newGame").onclick = function(){
 //     }
 //     console.log(response.status);
 //     console.log("hej")
+
+// window.location.href = "http://127.0.0.1:9033/waitingRoom.html";
 
 // }
