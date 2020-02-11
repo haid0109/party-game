@@ -20,3 +20,8 @@ input{
     margin-bottom: 20px;
     box-sizing: border-box;
 }
+
+#begin:hover{
+    background-color: black;
+    color: white;
+}
