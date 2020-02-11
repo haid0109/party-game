@@ -15,7 +15,6 @@ function displayPlayersInColumn1(){
         }    
         ).join("");
         document.getElementById("col-1").innerHTML = elements;
-        console.log(elements);
     })
     .catch((error) => { console.error('Error:', error); });
 }
