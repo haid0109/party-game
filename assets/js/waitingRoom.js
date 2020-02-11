@@ -12,8 +12,7 @@ function displayPlayersInColumn1(){
                     <p>${player.name}</p>
                 </div>                       
             </div >`;
-        }    
-        ).join("");
+        }).join("");
         document.getElementById("col-1").innerHTML = elements;
     })
     .catch((error) => { console.error('Error:', error); });
