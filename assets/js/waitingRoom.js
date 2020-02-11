@@ -12,15 +12,12 @@ function displayPlayersInColumn1(){
                     <p>${player.name}</p>
                 </div>                       
             </div >`;
-        }    
-        ).join("");
+        }).join("");
         document.getElementById("col-1").innerHTML = elements;
     })
     .catch((error) => { console.error('Error:', error); });
 }
 
 window.addEventListener("load", displayPlayersInColumn1);
-
-window.addEventListener("load", function(){
-    setInterval(displayPlayersInColumn1, 5000);
-});
+window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
+window.addEventListener("click", () => window.location.href = "upload.html");
