@@ -1,5 +1,5 @@
 //check game status
-window.addEventListener("load", function(){
+window.addEventListener("load", async function(){
     let status;
     await fetch('http://localhost:9423/game/current')
     .then((resp) => status = resp.status)
