@@ -21,7 +21,7 @@ input{
     box-sizing: border-box;
 }
 
-#begin:hover{
+#begin:hover, .flex-buttons button:hover{
     background-color: black;
     color: white;
 }
@@ -39,3 +39,4 @@ input{
     margin-bottom: 25px;
     border-radius: 15px;
 }
+
