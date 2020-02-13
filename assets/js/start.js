@@ -8,7 +8,7 @@ let app = express();
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
 
@@ -21,7 +21,7 @@ app.post("/game/current", express.json(), (req, res) => {
     game.status = "preround";
     res.send();
 });
-
+//
 app.get("/game/current", (req, res) => {
 
 
