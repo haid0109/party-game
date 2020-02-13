@@ -15,10 +15,10 @@ app.use(function (req, res, next) {
 app.post("/game/current", express.json(), (req, res) => {
     game = {
         players: [],
-        status: "initialized",
+        state: "initialized",
     };
     game.players.push(req.body);
-    game.status = "preround";
+    game.state = "preround";
     res.send();
 });
 //
@@ -38,7 +38,7 @@ app.post("/game/current/player", express.json(), (req, res) => {
     if(game == null){res.status(404).send("there is no game");}
     else{
         if(game.players.length <= 6){
-            if(game.status == "preround"){
+            if(game.state == "preround"){
                 game.players.push(req.body);
                 res.send();
             }
