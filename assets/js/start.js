@@ -23,8 +23,6 @@ app.post("/game/current", express.json(), (req, res) => {
 });
 //
 app.get("/game/current", (req, res) => {
-
-
     if(game != null){
         if(game.players.length <=6){
             res.send(game);

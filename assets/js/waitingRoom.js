@@ -20,4 +20,6 @@ function displayPlayersInColumn1(){
 
 window.addEventListener("load", displayPlayersInColumn1);
 window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
-window.addEventListener("click", () => window.location.href = "upload.html");
+document.getElementById("beginBtn").onclick = function(){
+    window.location.href = "upload.html";
+}
