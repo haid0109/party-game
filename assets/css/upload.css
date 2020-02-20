@@ -1,17 +1,20 @@
 .upload-wrapper{
-    width: 80%;
+    width: 90%;
     max-width: 500px;
     min-width: 300px;
-    min-height: 200px;
-    margin: 0 auto;
-    background-color: #303C4B;
+    margin: 40px auto;
+    background-color: black;
     padding: 15px;
     padding-top: 25px;
-    border-radius: 15px;
 }
 
 .upload-wrapper h1{
     font-size: 25px;
+}
+audio{
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 20px;
 }
 
 input{
@@ -19,11 +22,27 @@ input{
     margin: 0 auto;
     margin-bottom: 20px;
     box-sizing: border-box;
+    background-color: rgb(253, 240, 116);
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#begin{
+    background-color: rgb(247, 0, 255);
+    box-shadow: 0 4px 4px 0 rgba(253, 253, 253, 0.603), 0 6px 20px 0 rgba(253, 253, 253, 0.603);
+    border: none;
+    border-radius: 15px;
+    margin: 0 auto;
+    font-size: 20px;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color:white;
+    font-weight: bold;
 }
 
 #begin:hover, .flex-buttons button:hover{
-    background-color: black;
-    color: white;
+    background-color: rgb(184, 10, 190);
 }
 
 .flex-buttons{
@@ -38,5 +57,11 @@ input{
     font-size: 20px;
     margin-bottom: 25px;
     border-radius: 15px;
+    background-color: aquamarine;
+    border: none;
+}
+
+.flex-buttons button:hover{
+    background-color: rgb(109, 219, 182);
 }
 
