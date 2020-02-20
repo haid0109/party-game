@@ -1,8 +1,8 @@
 #waitingRoom{
-    width: 80%;
+    width: 100%;
+    margin: 0 auto;
     max-width: 500px;
     min-width: 300px;
-    background-color: #303C4B;
     padding: 15px;
     padding-top: 25px;
     border-radius: 15px;
@@ -34,20 +34,25 @@ h2{
 }
 
 .column1{
-    width: 35%;  
+    margin-top: 10px;
+    width: 33%;  
 }
 
 .column2{
-    width: 50%;  
+    width: 55%;
+    background-color: black;
+    margin-right: 10px;  
 }
 
 .column2 p{
     text-align: left;
     font-size: 16px;
     line-height: 1.5;
+    margin-right: 10px;
 }
 
 .player-wrapper{
+    background-color: black;
     width: 100%;
     border-radius: 15px;
     border: 1px solid white; 
@@ -76,13 +81,19 @@ h2{
 }
 
 button{
-    width: 100%;
-    padding: 10px;
+    background-color: rgb(247, 0, 255);
+    box-shadow: 0 4px 4px 0 rgba(253, 253, 253, 0.603), 0 6px 20px 0 rgba(253, 253, 253, 0.603);
+    border: none;
     border-radius: 15px;
+    margin: 0 auto;
+    font-size: 20px;
+    width: 90%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color:white;
+    font-weight: bold;
 }
 
 button:hover{
-    border-radius: 15px;
-    background-color: black;
-    color:white;
+    background-color: rgb(184, 10, 190);
 }
