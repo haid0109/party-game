@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+</head>
+<body>
+
+    <audio id="myAudio" controls>
+        <source src="https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3" type="audio/mpeg">
+    </audio><br>
+
+   
+    <button onclick="setPlaySpeedFast()" type="button">Fast</button>
+    <button onclick="setPlaySpeedSlow()" type="button">Slow</button>
+    <button onclick="setPlaySpeedReverse()" type="button">Reverse</button>
+    
+    
+    <script>
+
+
+        var x = document.getElementById("myAudio");
+
+        function setPlaySpeedFast() { 
+            x.playbackRate = 2;
+        }
+        function setPlaySpeedSlow() { 
+            x.playbackRate = 0.5;
+        }
+
+        function setPlaySpeedReverse() { 
+            x.playbackRate = -1.0;
+        }  
+
+        
+    </script>
+</body>
+</html>
