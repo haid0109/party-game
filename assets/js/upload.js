@@ -54,6 +54,15 @@ function handleData(audio){
     
 }
 
+var x = document.getElementById("myAudio");
+
+        function setPlaySpeedFast() { 
+            x.playbackRate = 2;
+        }
+        function setPlaySpeedSlow() { 
+            x.playbackRate = 0.5;
+        }
+
 window.addEventListener("load", checkCompatibility);
 
 // const player = document.getElementById('player');
