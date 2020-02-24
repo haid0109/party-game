@@ -1,5 +1,6 @@
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
+let recorder;
 
 function checkCompatibility(){
     if (!!navigator.mediaDevices.getUserMedia) {
@@ -11,7 +12,7 @@ function checkCompatibility(){
                     if(devices[index].kind == "audioinput") 
                     {
                         startBtn.disabled = false;
-                        startBtn.addEventListener("click", startRecording);
+                        startBtn.addEventListener("click", record);
                         return;
                     }
                 }
@@ -29,23 +30,27 @@ function checkCompatibility(){
     else { alert('Your browser does not support access to your microphone. Update or change browser'); }
 }
 
-function startRecording(){
+function record(){
     startBtn.disabled = true;
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
     .then((stream) => {
-        var recorder = new MediaRecorder(stream);
+        recorder = new MediaRecorder(stream);
         recorder.start();
         stopBtn.disabled = false
-        stopBtn.addEventListener("click", () => {
-            recorder.stop();
-            stopBtn.disabled = true;
-            startBtn.disabled = false;
-        });
-        recorder.addEventListener("dataavailable", (audio) => {
-            let audioPlayer = document.getElementById("player");
-            audioPlayer.src = URL.createObjectURL(audio.data);
-        });
+        stopBtn.addEventListener("click", stopRecording);
+        recorder.addEventListener("dataavailable", handleData);
     });
+}
+
+function stopRecording(){
+    recorder.stop();
+    stopBtn.disabled = true;
+    startBtn.disabled = false;
+}
+
+function handleData(audio){
+    let audioPlayer = document.getElementById("player");
+    audioPlayer.src = URL.createObjectURL(audio.data);
 }
 
 window.addEventListener("load", checkCompatibility);
