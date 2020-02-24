@@ -51,6 +51,7 @@ function stopRecording(){
 function handleData(audio){
     let audioPlayer = document.getElementById("player");
     audioPlayer.src = URL.createObjectURL(audio.data);
+    
 }
 
 window.addEventListener("load", checkCompatibility);
