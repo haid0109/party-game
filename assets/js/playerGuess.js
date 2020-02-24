@@ -1,7 +1,5 @@
-window.addEventListener("load", guessCheck());
-
 function guessCheck(){
-    var checkTheGuess = document.getElementById("playerGuess");
+    var checkTheGuess = document.getElementById("playerGuess").value;
     var correctAnswer = "gris";
 
 
@@ -10,6 +8,5 @@ function guessCheck(){
     } else {
         document.getElementById("test").innerHTML = "Wrong answer!";
     }
-   
-}
 
+}
