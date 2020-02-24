@@ -48,10 +48,23 @@ function stopRecording(){
     startBtn.disabled = false;
 }
 
-function handleData(audio){
+function handleData(audioBlob){
+    //sets populates the audio tag in frontend with the audio blob data
     let audioPlayer = document.getElementById("player");
-    audioPlayer.src = URL.createObjectURL(audio.data);
+    audioPlayer.src = URL.createObjectURL(audioBlob.data);
+
+    //creates a formdata instance and populates it with the audio blob
+    let correctAnswer = document.getElementById("correct").value;
+    let audioFormData = new FormData();
+    audioFormData.append(correctAnswer, audioBlob.data, "audio.mp3")
     
+    //posts the formdata to the server
+    fetch('http://localhost:9423/game/current/audio', {
+        method: 'POST',
+        body: audioFormData
+    })
+    .then((resp) => { console.log(resp.status); })
+    .catch((error) => { console.error('Error:', error); });
 }
 
 var x = document.getElementById("myAudio");

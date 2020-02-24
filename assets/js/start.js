@@ -1,10 +1,10 @@
 const express = require("express");
 const path = require('path');
+const busboy = require('express-busboy');
+const app = express();
 
 let game = null;
-//TODO: on join player, add player to game object
-
-let app = express();
+let sounds = [];
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,12 +16,13 @@ app.post("/game/current", express.json(), (req, res) => {
     game = {
         players: [],
         state: "initialized",
+        sound: [],
     };
     game.players.push(req.body);
     game.state = "preround";
     res.send();
 });
-//
+
 app.get("/game/current", (req, res) => {
     if(game != null){
         if(game.players.length <=6){
@@ -43,6 +44,21 @@ app.post("/game/current/player", express.json(), (req, res) => {
         }
         else{res.status(403).send("too many players");}
     }
+});
+
+busboy.extend(app, {
+    upload: true,
+    allowedPath: "/game/current/audio"
+});
+
+app.post("/game/current/audio", (req, res) => {
+    sounds.push(req.files);
+    game.sound.push(req.files);
+    res.send();
+});
+
+app.get("/game/current/audio", (req, res) => {
+    res.send(sounds);
 });
 
 app.listen(9423);
