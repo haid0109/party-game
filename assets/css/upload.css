@@ -8,7 +8,9 @@
 }
 
 .upload-wrapper h1{
+    width: 100%;
     font-size: 25px;
+    margin-bottom: 30px;
 }
 audio{
     width: 100%;
@@ -50,6 +52,10 @@ input{
     justify-content: space-between;
 }
 
+.flex-buttons:first-of-type{
+    margin-bottom: 27px;
+}
+
 .flex-buttons button{
     width: 47%;
     padding: 15px;
@@ -62,5 +68,16 @@ input{
 
 .flex-buttons button:hover{
     background-color: rgb(109, 219, 182);
+}
+
+#startButton{
+    background-color: palegreen;
+    color: black;
+    font-weight: bold;
+}
+#stopButton{
+    background-color: red;
+    color: black;
+    font-weight: bold;
 }
 
