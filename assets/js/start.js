@@ -48,7 +48,7 @@ app.post("/game/current/player", express.json(), (req, res) => {
 
 busboy.extend(app, {
     upload: true,
-    allowedPath: "/game/current/audio"
+    allowedPath: "/game/current/audio",
 });
 
 app.post("/game/current/audio", (req, res) => {
