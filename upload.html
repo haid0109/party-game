@@ -9,10 +9,13 @@
     <title>Document</title>
 </head>
 <body>
-    <button id="startButton" style="font-size: 2em;text-align: center;" disabled>start recording</button>
-    <button id="stopButton" style="font-size: 2em;text-align: center;" disabled>stop recording</button>
-    <form class="upload-wrapper">
+    <div class="upload-wrapper">
         <h1>Please Upload your soundbite and correct answer</h1>
+        <div class="flex-buttons">
+            <button id="startButton" disabled>start recording</button>
+            <button id="stopButton" disabled>stop recording</button>    
+        </div>
+        
         <audio id="player" controls>Your browser does not support the audio in your browser</audio>
         <input id="correct" type="text" placeholder="Correct answer (what did you upload)">
         <h1>Add effect!</h1>
@@ -21,8 +24,7 @@
             <button onclick="setPlaySpeedSlow()" type="button">Slow playspeed</button>    
         </div>
         <input id="begin" type="submit" value="begin">
-    </form>
-
+    </div>
     <script src="assets/js/upload.js"></script>
 </body>
 </html>
