@@ -57,7 +57,7 @@ function stopRecording(){
 }
 
 async function handleData(audio){
-    //sets populates the audio tag in frontend with the audio blob data
+    //populates the audio tag in frontend with the audio blob data
     let audioPlayer = document.getElementById("player");
     audioPlayer.src = URL.createObjectURL(audio.data);
 
@@ -65,16 +65,15 @@ async function handleData(audio){
     let correctAnswer = document.getElementById("correct").value;
     let audioFormData = new FormData();
     audioFormData.append("audio", audio.data, "audio.mp3");
-
-    console.log("old: ", audio.data);
     
-    //posts the formdata to the server
+    //posts the audio blob as formdata to the server
     await fetch('http://localhost:9423/game/current/audio', {
         method: 'POST',
         body: audioFormData
     })
     .catch((error) => { console.error('Error:', error); });
 
+    //gets the audio blob from the server and populates an audio tag in the frontend with it
     fetch('http://localhost:9423/game/current/audio/first')
     .then((resp) => {
         resp.blob().then((audioData) => {
