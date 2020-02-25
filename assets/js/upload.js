@@ -48,7 +48,7 @@ function stopRecording(){
     startBtn.disabled = false;
 }
 
-function handleData(audioBlob){
+async function handleData(audioBlob){
     //sets populates the audio tag in frontend with the audio blob data
     let audioPlayer = document.getElementById("player");
     audioPlayer.src = URL.createObjectURL(audioBlob.data);
@@ -56,14 +56,20 @@ function handleData(audioBlob){
     //creates a formdata instance and populates it with the audio blob
     let correctAnswer = document.getElementById("correct").value;
     let audioFormData = new FormData();
-    audioFormData.append(correctAnswer, audioBlob.data, "audio.mp3")
+    audioFormData.append("correctAnswer", audioBlob.data, "audio.mp3")
     
     //posts the formdata to the server
-    fetch('http://localhost:9423/game/current/audio', {
+    await fetch('http://localhost:9423/game/current/audio', {
         method: 'POST',
         body: audioFormData
     })
-    .then((resp) => { console.log(resp.status); })
+    .catch((error) => { console.error('Error:', error); });
+
+    fetch('http://localhost:9423/game/current/audio')
+    .then((resp) => {return resp.json()})
+    .then((arrayOfFormdataAudio) => {
+        console.log(arrayOfFormdataAudio);
+    })
     .catch((error) => { console.error('Error:', error); });
 }
 
