@@ -60,10 +60,7 @@ app.post("/game/current/audio", (req, res) => {
 
 app.get("/game/current/audio/first", (req, res) => {
     let path = sounds[0].audio.file;
-    
     let contentsOfPath = fs.readFileSync(path);
-    console.log("contents: ", contentsOfPath);
-
     res.send(contentsOfPath);
 });
 
