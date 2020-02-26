@@ -2,6 +2,14 @@ let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
 let recorder;
 
+let oooo = {
+    "hej": "dddd",
+    "hej2": "qqqq",
+    "hej3": "eeee",
+}
+
+let aaaa = "hej";
+
 function checkCompatibility(){
     if (!!navigator.mediaDevices.getUserMedia) {
         navigator.getUserMedia({video: false, audio: true}, function(){
@@ -48,22 +56,30 @@ function stopRecording(){
     startBtn.disabled = false;
 }
 
-function handleData(audioBlob){
-    //sets populates the audio tag in frontend with the audio blob data
+async function handleData(audio){
+    //populates the audio tag in frontend with the audio blob data
     let audioPlayer = document.getElementById("player");
-    audioPlayer.src = URL.createObjectURL(audioBlob.data);
+    audioPlayer.src = URL.createObjectURL(audio.data);
 
     //creates a formdata instance and populates it with the audio blob
     let correctAnswer = document.getElementById("correct").value;
     let audioFormData = new FormData();
-    audioFormData.append(correctAnswer, audioBlob.data, "audio.mp3")
+    audioFormData.append("audio", audio.data, "audio.mp3");
     
-    //posts the formdata to the server
-    fetch('http://localhost:9423/game/current/audio', {
+    //posts the audio blob as formdata to the server
+    await fetch('http://localhost:9423/game/current/audio', {
         method: 'POST',
         body: audioFormData
     })
-    .then((resp) => { console.log(resp.status); })
+    .catch((error) => { console.error('Error:', error); });
+
+    //gets the audio blob from the server and populates an audio tag in the frontend with it
+    fetch('http://localhost:9423/game/current/audio/first')
+    .then((resp) => {
+        resp.blob().then((audioData) => {
+            document.getElementById("player2").src = URL.createObjectURL(audioData);
+        });
+    })
     .catch((error) => { console.error('Error:', error); });
 }
 
