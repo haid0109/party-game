@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require('path');
 const busboy = require('express-busboy');
+const fs = require('fs');
 const app = express();
 
 let game = null;
@@ -57,8 +58,10 @@ app.post("/game/current/audio", (req, res) => {
     res.send();
 });
 
-app.get("/game/current/audio", (req, res) => {
-    res.send(sounds);
+app.get("/game/current/audio/first", (req, res) => {
+    let path = sounds[0].audio.file;
+    let contentsOfPath = fs.readFileSync(path);
+    res.send(contentsOfPath);
 });
 
 app.listen(9423);
