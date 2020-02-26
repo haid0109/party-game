@@ -17,7 +17,11 @@ app.post("/game/current", express.json(), (req, res) => {
     game = {
         players: [],
         state: "initialized",
-        sound: [],
+        sound: [
+            {
+                correctAnswer: "gris"
+            }
+        ],
     };
     game.players.push(req.body);
     game.state = "preround";
@@ -63,6 +67,19 @@ app.get("/game/current/audio/first", (req, res) => {
     let contentsOfPath = fs.readFileSync(path);
     res.send(contentsOfPath);
 });
+
+app.post("/game/current/start", (req, res) => {
+    game.state = "in progress";
+    res.send(204);
+});
+
+app.get("/game/current/question", (req, res) => {
+    res.send(game.sound[0]);
+});
+
+// app.use(function(req, res, next){
+//     res.send(404);
+// });
 
 app.listen(9423);
 

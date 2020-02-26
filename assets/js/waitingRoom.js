@@ -1,5 +1,5 @@
-function displayPlayersInColumn1(){
-    fetch('http://localhost:9423/game/current')
+async function displayPlayersInColumn1(){
+    await fetch('http://localhost:9423/game/current')
     .then((resp) => {return resp.json()})
     .then((game) => {
         let playerCount = 1;
@@ -18,6 +18,22 @@ function displayPlayersInColumn1(){
     .catch((error) => { console.error('Error:', error); });
 }
 
-window.addEventListener("load", displayPlayersInColumn1);
+async function startGame(){
+    await fetch('http://localhost:9423/game/current/start',{method:"POST"})
+    .then((response) => {
+        if(response.status == 404){
+            
+            return;
+        }
+        window.location.href = "playerGuess.html";
+        
+    })
+    .catch((error) => { console.error('Error:', error); });  
+}
+
+
+
+window.addEventListener("load", () => displayPlayersInColumn1(), false);
 window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
 document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html");
+document.getElementById("startGame").addEventListener("click", () => startGame());
