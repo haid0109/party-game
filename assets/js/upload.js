@@ -77,6 +77,7 @@ var x = document.getElementById("myAudio");
         }
 
 window.addEventListener("load", checkCompatibility);
+document.getElementById("begin").addEventListener("click", () => window.location.href = "waitingRoom.html");
 
 // const player = document.getElementById('player');
 // const handleSuccess = function(stream) {
