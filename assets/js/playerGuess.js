@@ -1,9 +1,11 @@
 async function guessCheck(){
-    await fetch('')
+    await fetch('http://localhost:9423/game/current/question')
     .then((response) => {
-        var checkTheGuess = document.getElementById("playerGuess").value;
-        var correctAnswer = "gris";
+        return response.json();
 
+    }).then((sound) => {
+        var checkTheGuess = document.getElementById("playerGuess").value;
+        let correctAnswer = sound.correctAnswer;
 
         if(checkTheGuess == correctAnswer) {
             document.getElementById("test").innerHTML = "Correct answer!";
@@ -12,6 +14,5 @@ async function guessCheck(){
         }
     })
     .catch((error) => { console.error('Error:', error); });
-
 }
 

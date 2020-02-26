@@ -22,16 +22,18 @@ async function startGame(){
     await fetch('http://localhost:9423/game/current/start',{method:"POST"})
     .then((response) => {
         if(response.status == 404){
+            
             return;
         }
-        window.location.href = "playerGuess.html"
+        window.location.href = "playerGuess.html";
+        
     })
     .catch((error) => { console.error('Error:', error); });  
 }
 
 
 
-window.addEventListener("load", await displayPlayersInColumn1);
-window.addEventListener("load", () => setInterval(await displayPlayersInColumn1, 5000));
+window.addEventListener("load", () => displayPlayersInColumn1(), false);
+window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
 document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html");
 document.getElementById("startGame").addEventListener("click", () => startGame());
