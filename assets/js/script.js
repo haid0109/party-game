@@ -19,7 +19,7 @@ window.addEventListener("load", async function(){
 });
 
 //add new player
-document.getElementById("joinGame").onclick = function(){
+document.getElementById("joinGame").addEventListener("click", () => {
     const player = {name: document.getElementById("name").value};
     fetch('http://localhost:9423/game/current/player', {
         method: 'POST',
@@ -27,10 +27,11 @@ document.getElementById("joinGame").onclick = function(){
         body: JSON.stringify(player)
     })
     .catch((error) => { console.error('Error:', error); });
-}
+    window.location.href = "waitingRoom.html" + "?name=" + player.name;
+});
 
 //create new game
-document.getElementById("newGame").onclick = function(){
+document.getElementById("newGame").addEventListener("click", () => {
     const player = {name: document.getElementById("name").value};
     fetch('http://localhost:9423/game/current', {
         method: 'POST',
@@ -38,4 +39,5 @@ document.getElementById("newGame").onclick = function(){
         body: JSON.stringify(player)
     })
     .catch((error) => { console.error('Error:', error); });
-}
+    window.location.href = "waitingRoom.html" + "?name=" + player.name;
+});

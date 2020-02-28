@@ -5,7 +5,6 @@ const fs = require('fs');
 const app = express();
 
 let game = null;
-let sounds = [];
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,13 +14,9 @@ app.use(function (req, res, next) {
 
 app.post("/game/current", express.json(), (req, res) => {
     game = {
-        players: [],
         state: "initialized",
-        sound: [
-            {
-                correctAnswer: "gris"
-            }
-        ],
+        players: [],
+        sounds: [],
     };
     game.players.push(req.body);
     game.state = "preround";
@@ -30,7 +25,7 @@ app.post("/game/current", express.json(), (req, res) => {
 
 app.get("/game/current", (req, res) => {
     if(game != null){
-        if(game.players.length <=6){
+        if(game.players.length <= 6){
             res.send(game);
         }
         else{ res.status(403).send("too many players. "+ game.players.length ); }
@@ -57,20 +52,24 @@ busboy.extend(app, {
 });
 
 app.post("/game/current/audio", (req, res) => {
-    sounds.push(req.files);
-    game.sound.push(req.files);
+    let parsedCorrectAnswer = JSON.parse(req.body.correctAnswer);
+    let audioDataAnswer = {
+        audio: req.files.audio,
+        correctAnswer: parsedCorrectAnswer,
+    }
+    game.sounds.push(audioDataAnswer);
     res.send();
 });
 
 app.get("/game/current/audio/first", (req, res) => {
-    let path = sounds[0].audio.file;
+    let path = game.sounds[0].audio.file;
     let contentsOfPath = fs.readFileSync(path);
     res.send(contentsOfPath);
 });
 
 app.post("/game/current/start", (req, res) => {
     game.state = "in progress";
-    res.send(204);
+    res.status(204).send("game in progress");
 });
 
 app.get("/game/current/question", (req, res) => {
@@ -82,4 +81,3 @@ app.get("/game/current/question", (req, res) => {
 // });
 
 app.listen(9423);
-

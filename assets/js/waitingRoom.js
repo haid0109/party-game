@@ -25,15 +25,13 @@ async function startGame(){
             
             return;
         }
-        window.location.href = "playerGuess.html";
+        window.location.href = "playerGuess.html" + window.location.search;
         
     })
     .catch((error) => { console.error('Error:', error); });  
 }
 
-
-
 window.addEventListener("load", () => displayPlayersInColumn1(), false);
 window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
-document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html");
+document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
 document.getElementById("startGame").addEventListener("click", () => startGame());

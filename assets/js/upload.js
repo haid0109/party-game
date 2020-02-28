@@ -1,14 +1,7 @@
+const playerName = new URLSearchParams(window.location.search).get("name");
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
 let recorder;
-
-let oooo = {
-    "hej": "dddd",
-    "hej2": "qqqq",
-    "hej3": "eeee",
-}
-
-let aaaa = "hej";
 
 function checkCompatibility(){
     if (!!navigator.mediaDevices.getUserMedia) {
@@ -60,12 +53,16 @@ async function handleData(audio){
     //populates the audio tag in frontend with the audio blob data
     let audioPlayer = document.getElementById("player");
     audioPlayer.src = URL.createObjectURL(audio.data);
-
-    //creates a formdata instance and populates it with the audio blob
     let correctAnswer = document.getElementById("correct").value;
+
+    let answer = correctAnswer;
+    let stringifiedAnswer = JSON.stringify(answer);
+    
+    //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
     audioFormData.append("audio", audio.data, "audio.mp3");
-    
+    audioFormData.append("correctAnswer", stringifiedAnswer);
+
     //posts the audio blob as formdata to the server
     await fetch('http://localhost:9423/game/current/audio', {
         method: 'POST',
@@ -93,7 +90,7 @@ var x = document.getElementById("myAudio");
         }
 
 window.addEventListener("load", checkCompatibility);
-document.getElementById("begin").addEventListener("click", () => window.location.href = "waitingRoom.html");
+document.getElementById("begin").addEventListener("click", () => window.location.href = "waitingRoom.html" + window.location.search);
 
 // const player = document.getElementById('player');
 // const handleSuccess = function(stream) {
