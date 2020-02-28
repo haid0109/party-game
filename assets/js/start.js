@@ -16,7 +16,6 @@ app.post("/game/current", express.json(), (req, res) => {
     game = {
         state: "initialized",
         players: [],
-        sounds: [],
     };
     game.players.push(req.body);
     game.state = "preround";
@@ -52,12 +51,30 @@ busboy.extend(app, {
 });
 
 app.post("/game/current/audio", (req, res) => {
-    let parsedCorrectAnswer = JSON.parse(req.body.correctAnswer);
-    let audioDataAnswer = {
-        audio: req.files.audio,
-        correctAnswer: parsedCorrectAnswer,
+    let parsedPlayerData = JSON.parse(req.body.playerData);
+    let correctAnswer = parsedPlayerData.answer;
+    let playerName = parsedPlayerData.name;
+    let audioData = req.files.audio;
+
+    loopPlayerNames: for(let arrayIndex = 0; arrayIndex < game.players.length; arrayIndex++){
+        if(game.players[arrayIndex].name == playerName){
+            game.players[arrayIndex].audio = audioData;
+            game.players[arrayIndex].answer = correctAnswer;
+            res.status(200);
+            break loopPlayerNames;
+        }
+        else{res.status(404);}
     }
-    game.sounds.push(audioDataAnswer);
+
+    // game.players.forEach((player, arrayIndex) => {
+    //     if(player.name == playerName){
+    //         game.players[arrayIndex].audio = audioData;
+    //         game.players[arrayIndex].answer = correctAnswer;
+    //         res.status(200);
+    //     }
+    //     else{res.status(404);}
+    // });
+
     res.send();
 });
 

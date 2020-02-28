@@ -55,19 +55,24 @@ async function handleData(audio){
     audioPlayer.src = URL.createObjectURL(audio.data);
     let correctAnswer = document.getElementById("correct").value;
 
-    let answer = correctAnswer;
-    let stringifiedAnswer = JSON.stringify(answer);
+    //creates an object which contains the player name and correct answer, and converts it to JSON 
+    let playerData = {
+        name: playerName,
+        answer: correctAnswer,
+    }
+    let stringifiedPlayerData = JSON.stringify(playerData);
     
     //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
     audioFormData.append("audio", audio.data, "audio.mp3");
-    audioFormData.append("correctAnswer", stringifiedAnswer);
+    audioFormData.append("playerData", stringifiedPlayerData);
 
     //posts the audio blob as formdata to the server
     await fetch('http://localhost:9423/game/current/audio', {
         method: 'POST',
         body: audioFormData
     })
+    .then((resp) => {console.log(resp.status);})
     .catch((error) => { console.error('Error:', error); });
 
     //gets the audio blob from the server and populates an audio tag in the frontend with it
