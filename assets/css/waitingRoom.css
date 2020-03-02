@@ -86,8 +86,7 @@ h2{
     width: 10%;
 }
 
-.ready-marker{
-    background-color: red;
+#ready-marker{
     border-radius: 15px;
     border: 1px solid white;
     width: 10px;
