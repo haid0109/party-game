@@ -2,7 +2,7 @@ const playerName = new URLSearchParams(window.location.search).get("name");
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
 let audioPlayer = document.getElementById("player");
-let correctAnswer = document.getElementById("correct").value;
+let correctAnswer = null;
 let recorder;
 
 function checkCompatibility(){
@@ -34,6 +34,7 @@ function checkCompatibility(){
 }
 
 function record(){
+    correctAnswer = document.getElementById("correct").value;
     if(!correctAnswer){
         alert("you need to write a correct answer for your audio");
         return;
@@ -84,6 +85,7 @@ async function handleData(audio){
         });
     })
     .catch((error) => { console.error('Error:', error); });
+    document.getElementById("correct").value = "";
 }
 
 var x = document.getElementById("myAudio");

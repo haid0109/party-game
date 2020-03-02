@@ -20,6 +20,11 @@ window.addEventListener("load", async function(){
 
 //add new player
 document.getElementById("joinGame").addEventListener("click", () => {
+    if(!document.getElementById("name").value)
+    {
+        alert("you need to enter a name to play the game")
+        return;
+    }
     const player = {name: document.getElementById("name").value};
     fetch('http://localhost:9423/game/current/player', {
         method: 'POST',
