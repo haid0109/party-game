@@ -79,7 +79,7 @@ app.post("/game/current/audio", (req, res) => {
 });
 
 app.get("/game/current/audio/first", (req, res) => {
-    let path = game.sounds[0].audio.file;
+    let path = game.players[0].audio.file;
     let contentsOfPath = fs.readFileSync(path);
     res.send(contentsOfPath);
 });
