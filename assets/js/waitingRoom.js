@@ -10,6 +10,9 @@ async function displayPlayersInColumn1(){
                 <div class="player-text">
                     <p>player ${playerCount++}</p>
                     <p>${player.name}</p>
+                </div>
+                <div class="ready-wrapper">
+                    <div class="ready-marker"></div>
                 </div>                       
             </div >`;
         }).join("");

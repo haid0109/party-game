@@ -21,7 +21,7 @@ p{
     margin-bottom: 15px;
 }
 
-form{
+#joinGameForm{
     width: 90%;
     max-width: 500px;
     margin: 40px auto;
