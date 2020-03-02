@@ -92,8 +92,4 @@ app.get("/game/current/question", (req, res) => {
     res.send(game.sound[0]);
 });
 
-// app.use(function(req, res, next){
-//     res.send(404);
-// });
-
 app.listen(9423);

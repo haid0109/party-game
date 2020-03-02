@@ -60,6 +60,7 @@ async function handleData(audio){
         answer: correctAnswer,
     }
     let stringifiedPlayerData = JSON.stringify(playerData);
+    
     //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
     audioFormData.append("audio", audio.data, "audio.mp3");
