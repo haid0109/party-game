@@ -3,7 +3,8 @@ async function guessCheck(){
     .then((response) => {
         return response.json();
 
-    }).then((sound) => {
+    })
+    .then((sound) => {
         var checkTheGuess = document.getElementById("playerGuess").value;
         let correctAnswer = sound.correctAnswer;
 

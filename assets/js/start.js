@@ -5,6 +5,7 @@ const fs = require('fs');
 const app = express();
 
 let game = null;
+let playerName = null;
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -47,14 +48,14 @@ app.post("/game/current/player", express.json(), (req, res) => {
 
 busboy.extend(app, {
     upload: true,
-    allowedPath: "/game/current/audio",
+    allowedPath: "/game/current/postAudio",
 });
 
-app.post("/game/current/audio", (req, res) => {
+app.post("/game/current/postAudio", (req, res) => {
     let parsedPlayerData = JSON.parse(req.body.playerData);
     let correctAnswer = parsedPlayerData.answer;
-    let playerName = parsedPlayerData.name;
     let audioData = req.files.audio;
+    playerName = parsedPlayerData.name;
 
     loopPlayerNames: for(let arrayIndex = 0; arrayIndex < game.players.length; arrayIndex++){
         if(game.players[arrayIndex].name == playerName){
@@ -66,22 +67,20 @@ app.post("/game/current/audio", (req, res) => {
         else{res.status(404);}
     }
 
-    // game.players.forEach((player, arrayIndex) => {
-    //     if(player.name == playerName){
-    //         game.players[arrayIndex].audio = audioData;
-    //         game.players[arrayIndex].answer = correctAnswer;
-    //         res.status(200);
-    //     }
-    //     else{res.status(404);}
-    // });
-
     res.send();
 });
 
-app.get("/game/current/audio/first", (req, res) => {
-    let path = game.players[0].audio.file;
-    let contentsOfPath = fs.readFileSync(path);
-    res.send(contentsOfPath);
+app.get("/game/current/getAudio", (req, res) => {
+    loopPlayerNames: for(let arrayIndex = 0; arrayIndex < game.players.length; arrayIndex++){
+        if(game.players[arrayIndex].name == playerName){
+            let path = game.players[arrayIndex].audio.file;
+            let contentsOfPath = fs.readFileSync(path);
+            res.send(contentsOfPath);
+            res.status(200);
+            break loopPlayerNames;
+        }
+        else{res.status(404);}
+    }
 });
 
 app.post("/game/current/start", (req, res) => {
@@ -92,9 +91,5 @@ app.post("/game/current/start", (req, res) => {
 app.get("/game/current/question", (req, res) => {
     res.send(game.sound[0]);
 });
-
-// app.use(function(req, res, next){
-//     res.send(404);
-// });
 
 app.listen(9423);
