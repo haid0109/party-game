@@ -12,7 +12,7 @@ async function displayPlayersInColumn1(){
                     <p>${player.name}</p>
                 </div>
                 <div class="ready-wrapper">
-                    <div class="ready-marker"></div>
+                    <div id="ready-marker" style="background-color: red;"></div>
                 </div>                       
             </div >`;
         }).join("");
