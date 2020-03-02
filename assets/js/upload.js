@@ -52,7 +52,6 @@ function stopRecording(){
 async function handleData(audio){
     //populates the audio tag in frontend with the audio blob data
     let audioPlayer = document.getElementById("player");
-    audioPlayer.src = URL.createObjectURL(audio.data);
     let correctAnswer = document.getElementById("correct").value;
 
     //creates an object which contains the player name and correct answer, and converts it to JSON 
@@ -61,14 +60,13 @@ async function handleData(audio){
         answer: correctAnswer,
     }
     let stringifiedPlayerData = JSON.stringify(playerData);
-    
     //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
     audioFormData.append("audio", audio.data, "audio.mp3");
     audioFormData.append("playerData", stringifiedPlayerData);
 
     //posts the audio blob as formdata to the server
-    await fetch('http://localhost:9423/game/current/audio', {
+    await fetch('http://localhost:9423/game/current/postAudio', {
         method: 'POST',
         body: audioFormData
     })
@@ -76,10 +74,10 @@ async function handleData(audio){
     .catch((error) => { console.error('Error:', error); });
 
     //gets the audio blob from the server and populates an audio tag in the frontend with it
-    fetch('http://localhost:9423/game/current/audio/first')
+    fetch('http://localhost:9423/game/current/getAudio')
     .then((resp) => {
         resp.blob().then((audioData) => {
-            document.getElementById("player2").src = URL.createObjectURL(audioData);
+            audioPlayer.src = URL.createObjectURL(audioData);
         });
     })
     .catch((error) => { console.error('Error:', error); });
