@@ -58,11 +58,13 @@ h2{
     padding: 10px;
     display: flex;
     margin-bottom: 15px;
+    justify-content: space-between;
 }
 
 .player-wrapper .player-text p{
     font-size: 16px;
     margin-left: 10px;
+    text-align: left;
 }
 
 .player-wrapper .player-text p:first-of-type{
@@ -71,12 +73,26 @@ h2{
 
 .player-text{
     display:block;
+    width: 53%;
 }
 
 .player-wrapper img{
     width: 25%;
     border: 1px solid white;
     height: 50px;
+}
+
+.ready-wrapper{
+    width: 10%;
+}
+
+.ready-marker{
+    background-color: red;
+    border-radius: 15px;
+    border: 1px solid white;
+    width: 10px;
+    margin: 25px auto;
+    min-height: 10px;
 }
 
 button{
