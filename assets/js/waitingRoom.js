@@ -1,3 +1,14 @@
+const playerIsReady = new URLSearchParams(window.location.search).get("playerReady");
+let color = "";
+
+function ready(){
+    if(playerIsReady == "true"){
+        color = "green";
+    }else{
+        color = "red";
+    }
+}
+
 async function displayPlayersInColumn1(){
     await fetch('http://localhost:9423/game/current')
     .then((resp) => {return resp.json()})
@@ -12,7 +23,7 @@ async function displayPlayersInColumn1(){
                     <p>${player.name}</p>
                 </div>
                 <div class="ready-wrapper">
-                    <div id="ready-marker" style="background-color: red;"></div>
+                    <div id="ready-marker" style="background-color: ${color};"></div>
                 </div>                       
             </div >`;
         }).join("");
@@ -34,6 +45,7 @@ async function startGame(){
     .catch((error) => { console.error('Error:', error); });  
 }
 
+window.addEventListener("load", () => ready());
 window.addEventListener("load", () => displayPlayersInColumn1(), false);
 window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
 document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
