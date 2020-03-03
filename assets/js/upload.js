@@ -98,7 +98,7 @@ var x = document.getElementById("myAudio");
         }
 
 window.addEventListener("load", checkCompatibility);
-document.getElementById("done").addEventListener("click", () => window.location.href = "waitingRoom.html" + window.location.search);
+document.getElementById("done").addEventListener("click", () => window.location.href = "waitingRoom.html" + window.location.search + "&playerReady=true");
 
 // const player = document.getElementById('player');
 // const handleSuccess = function(stream) {
