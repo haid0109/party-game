@@ -17,3 +17,4 @@ async function guessCheck(){
     .catch((error) => { console.error('Error:', error); });
 }
 
+document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html");

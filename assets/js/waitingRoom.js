@@ -2,7 +2,6 @@ async function displayPlayersInColumn1(){
     await fetch('http://localhost:9423/game/current')
     .then((resp) => {return resp.json()})
     .then((game) => {
-        console.log(game);
         let playerCount = 1;
         let players = game.players;
         var elements = players.map(player => {
