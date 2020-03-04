@@ -61,6 +61,7 @@ app.post("/game/current/postAudio", (req, res) => {
         if(game.players[arrayIndex].name == playerName){
             game.players[arrayIndex].audio = audioData;
             game.players[arrayIndex].answer = correctAnswer;
+            game.players[arrayIndex].playerReady = true;
             res.status(200);
             break loopPlayerNames;
         }
