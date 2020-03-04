@@ -18,3 +18,4 @@ async function guessCheck(){
 }
 
 document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html");
+
