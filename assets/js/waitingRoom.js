@@ -22,14 +22,17 @@ async function displayPlayersInColumn1(){
 }
 
 async function startGame(){
-    await fetch('http://localhost:9423/game/current/start',{method:"POST"})
+    await fetch('http://localhost:9423/game/current/start',
+    {
+        method:"POST",
+    })
     .then((response) => {
-        if(response.status == 404){
-            
+        if(response.status == 404)
+        {
+            alert("something went wrong");
             return;
         }
-        window.location.href = "playerGuess.html" + window.location.search;
-        
+        window.location.href = "playerGuess.html" + window.location.search + "&round=1dasdasda";
     })
     .catch((error) => { console.error('Error:', error); });  
 }

@@ -7,6 +7,13 @@ const app = express();
 let game = null;
 let playerName = null;
 
+function shuffleArray(array) {
+    for (let arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
+        const randomNum = Math.floor(Math.random() * (arrayIndex + 1));
+        [array[arrayIndex], array[randomNum]] = [array[randomNum], array[arrayIndex]];
+    }
+}
+
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -51,16 +58,17 @@ busboy.extend(app, {
     allowedPath: "/game/current/postAudio",
 });
 
-app.post("/game/current/postAudio", (req, res) => {
+app.post("/game/current/postAudio", async (req, res) => {
     let parsedPlayerData = JSON.parse(req.body.playerData);
     let correctAnswer = parsedPlayerData.answer;
-    let audioData = req.files.audio;
     playerName = parsedPlayerData.name;
+    let audioData = req.files.audio;
 
     loopPlayerNames: for(let arrayIndex = 0; arrayIndex < game.players.length; arrayIndex++){
         if(game.players[arrayIndex].name == playerName){
             game.players[arrayIndex].audio = audioData;
             game.players[arrayIndex].answer = correctAnswer;
+
             res.status(200);
             break loopPlayerNames;
         }
@@ -85,6 +93,7 @@ app.get("/game/current/getAudio", (req, res) => {
 
 app.post("/game/current/start", (req, res) => {
     game.state = "in progress";
+    shuffleArray(game.players);
     res.status(204).send("game in progress");
 });
 

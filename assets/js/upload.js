@@ -1,8 +1,10 @@
-const playerName = new URLSearchParams(window.location.search).get("name");
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
-let audioPlayer = document.getElementById("player");
+
+const playerName = new URLSearchParams(window.location.search).get("name");
 let correctAnswer = null;
+
+let audioPlayer = document.getElementById("player");
 let recorder;
 
 function checkCompatibility(){
@@ -57,6 +59,27 @@ function stopRecording(){
 }
 
 async function handleData(audio){
+    /*
+    var blob = audio.data;
+    arrBuffer = await blob.arrayBuffer();
+    var context = new AudioContext();
+    var source = null;
+    
+    let buffer = await context.decodeAudioData(arrBuffer);
+    source = context.createBufferSource();
+    Array.prototype.reverse.call( buffer.getChannelData(0) );
+    source.buffer = buffer;
+    source.connect(context.destination);
+    source.start();
+
+    let dd = source.buffer.getChannelData(0);
+    
+    var bb = new Blob([source.buffer.getChannelData(0)], {type: "audio/webm;codecs=opus"});
+    audioPlayer.src = URL.createObjectURL(bb);
+    console.log("succes", audio.data);
+    console.log("succes2", bb);
+    */
+    
     //creates an object which contains the player name and correct answer, and converts it to JSON 
     let playerData = {
         name: playerName,
@@ -116,4 +139,3 @@ document.getElementById("done").addEventListener("click", () => window.location.
         // navigator.mediaDevices.getUserMedia(options)
         // .then(audioStream => {
         // });
-
