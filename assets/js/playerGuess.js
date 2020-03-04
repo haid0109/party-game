@@ -17,8 +17,4 @@ async function guessCheck(){
     .catch((error) => { console.error('Error:', error); });
 }
 
-window.addEventListener("load", () => {
-    document.getElementById("roundTitle").innerHTML = "Round " + roundNum;
-});
-
-document.getElementById("begin").addEventListener("click", guessCheck)
+document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html");

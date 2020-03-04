@@ -1,4 +1,4 @@
-.answer-wrapper{
+#answer-wrapper{
     width: 100%;
     margin: 0 auto;
     display: flex;
@@ -16,6 +16,22 @@ h3{
     margin-bottom: 20px;
 }
 
+.column1{
+    width: 100%;
+}
+
+.ready-wrapper{
+    width: 10%;
+}
+
+#ready-marker{
+    border-radius: 15px;
+    border: 1px solid white;
+    width: 10px;
+    margin: 25px auto;
+    min-height: 10px;
+}
+
 .player-wrapper{
     background-color: black;
     margin: 15px auto;
@@ -31,6 +47,7 @@ h3{
 .player-wrapper .player-text p{
     width: 100%;
     font-size: 20px;
+    text-align: left;
 }
 
 .player-wrapper .player-text p:first-of-type{
@@ -50,7 +67,7 @@ h3{
 }
 
 .theirGuess{
-    width: 40%;
+    width: 30%;
 }
 
 .theirGuess p{

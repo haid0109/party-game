@@ -12,17 +12,43 @@ async function displayPlayersInColumn1(){
                     <p>player ${playerCount++}</p>
                     <p>${player.name}</p>
                 </div>
+                <div class="theirGuess">
+                    <p>Guess</p>
+                    <p></p>
+                </div>
+                <div class="ready-wrapper">
+                    <div id="ready-marker" style="background-color: red;"></div>
+                </div>                       
+            </div >`;   
+            }
+
+            if(player.playerReady == false){
+                return `<div class="player-wrapper">
+                <img src = "" alt = "">
+                <div class="player-text">
+                    <p>player ${playerCount++}</p>
+                    <p>${player.name}</p>
+                </div>
+                <div class="theirGuess">
+                    <p>Guess</p>
+                    <p></p>
+                </div>
                 <div class="ready-wrapper">
                     <div id="ready-marker" style="background-color: green;"></div>
                 </div>                       
             </div >`;   
             }
+
             if(!player.playerReady){
                 return `<div class="player-wrapper">
                 <img src = "" alt = "">
                 <div class="player-text">
                     <p>player ${playerCount++}</p>
                     <p>${player.name}</p>
+                </div>
+                <div class="theirGuess">
+                    <p>Guess</p>
+                    <p></p>
                 </div>
                 <div class="ready-wrapper">
                     <div id="ready-marker" style="background-color: red;"></div>
@@ -36,23 +62,8 @@ async function displayPlayersInColumn1(){
     .catch((error) => { console.error('Error:', error); });
 }
 
-async function startGame(){
-    await fetch('http://localhost:9423/game/current/start',
-    {
-        method:"POST",
-    })
-    .then((response) => {
-        if(response.status == 404)
-        {
-            alert("something went wrong");
-            return;
-        }
-        window.location.href = "playerGuess.html" + window.location.search + "&round=1dasdasda";
-    })
-    .catch((error) => { console.error('Error:', error); });  
-}
+
 
 window.addEventListener("load", () => displayPlayersInColumn1(), false);
 window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
-document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
-document.getElementById("startGame").addEventListener("click", () => startGame());
+
