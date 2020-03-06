@@ -1,3 +1,4 @@
+const playerName = new URLSearchParams(window.location.search).get("name");
 async function displayPlayersInColumn1(){
     await fetch('http://localhost:9423/game/current')
     .then((resp) => {return resp.json()})

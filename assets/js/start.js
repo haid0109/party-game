@@ -17,6 +17,8 @@ app.post("/game/current", express.json(), (req, res) => {
     game = {
         state: "initialized",
         players: [],
+        numberOfRounds: 0,
+        currentRound: 0,
     };
     game.players.push(req.body);
     game.state = "preround";
@@ -62,6 +64,7 @@ app.post("/game/current/postAudio", (req, res) => {
             game.players[arrayIndex].audio = audioData;
             game.players[arrayIndex].answer = correctAnswer;
             game.players[arrayIndex].playerReady = true;
+            game.numberOfRounds++;
             res.status(200);
             break loopPlayerNames;
         }
@@ -92,5 +95,22 @@ app.post("/game/current/start", (req, res) => {
 app.get("/game/current/question", (req, res) => {
     res.send(game.sound[0]);
 });
+
+app.get("game/current/round", (req, res) => {
+    game.currentRound++;
+    if(game.currentRound > game.numberOfRounds){
+        res.sendStatus(404);
+        return;
+    }
+
+    let questionData = {
+        audio: game.players[game.currentRound -1].audio,
+        answer: game.players[game.currentRound -1].answer,    
+    }
+
+    res.send(questionData);
+    return;
+    
+})
 
 app.listen(9423);

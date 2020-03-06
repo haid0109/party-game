@@ -1,3 +1,4 @@
+const playerName = new URLSearchParams(window.location.search).get("name");
 async function guessCheck(){
     await fetch('http://localhost:9423/game/current/question')
     .then((response) => {
@@ -17,5 +18,5 @@ async function guessCheck(){
     .catch((error) => { console.error('Error:', error); });
 }
 
-document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html");
+document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html" + window.location.search);
 
