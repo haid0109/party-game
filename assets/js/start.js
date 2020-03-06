@@ -101,7 +101,7 @@ app.post("/game/current/start", (req, res) => {
 });
 
 app.get("/game/current/question", (req, res) => {
-    res.send(game.sound[0]);
+    res.send(game.guessChecker[0]);
 });
 
 app.get("game/current/round", (req, res) => {

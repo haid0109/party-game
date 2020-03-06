@@ -6,22 +6,7 @@ async function displayPlayersInColumn1(){
         let playerCount = 1;
         let players = game.players;
         var elements = players.map(player => {
-            if(player.playerReady == false){
-                return `<div class="player-wrapper">
-                <img src = "" alt = "">
-                <div class="player-text">
-                    <p>player ${playerCount++}</p>
-                    <p>${player.name}</p>
-                </div>
-                <div class="theirGuess">
-                    <p>Guess</p>
-                    <p>${player.answer}</p>
-                </div>
-                <div class="ready-wrapper">
-                    <div id="ready-marker" style="background-color: red;"></div>
-                </div>                       
-            </div >`;     
-            }
+
             if(player.playerHasGuessed == true){
                 return `<div class="player-wrapper">
                 <img src = "" alt = "">
@@ -31,7 +16,7 @@ async function displayPlayersInColumn1(){
                 </div>
                 <div class="theirGuess">
                     <p>Guess</p>
-                    <p>${player.answer}</p>
+                    <p>${player.guessChecker}</p>
                 </div>
                 <div class="ready-wrapper">
                     <div id="ready-marker" style="background-color: green;"></div>
