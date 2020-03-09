@@ -1,16 +1,21 @@
 const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
 
-function soundDataFile(){
-    fetch('http://localhost:9423/game/current/getAudio')
+async function soundDataFile(){
+    await fetch('http://localhost:9423/game/current/getAudio')
     .then((resp) => {
         resp.blob().then((audioData) => {
-            audioPlayer.src = URL.createObjectURL(audioData);
-        });
+            console.log(audioData);
+            URL.createObjectURL(audioData)
+            if(!audioData){
+                console.log("file not found");
+            }        
+        }); 
     })
     .catch((error) => { console.error('Error:', error); });
     document.getElementById("player").value = "";
 }
+
 
 async function guessCheck(){
     await fetch('http://localhost:9423/game/current/question')
