@@ -2,7 +2,10 @@ const express = require("express");
 const path = require('path');
 const busboy = require('express-busboy');
 const fs = require('fs');
+const WAA = require('web-audio-api');
+const stream = require('stream');
 const app = express();
+const audioBufferToWav = require("audiobuffer-to-wav");
 
 let game = null;
 let playerName = null;
@@ -58,37 +61,55 @@ busboy.extend(app, {
     allowedPath: "/game/current/postAudio",
 });
 
-app.post("/game/current/postAudio", async (req, res) => {
+app.post("/game/current/postAudio", (req, res) => {
     let parsedPlayerData = JSON.parse(req.body.playerData);
     let correctAnswer = parsedPlayerData.answer;
-    playerName = parsedPlayerData.name;
     let audioData = req.files.audio;
+    playerName = parsedPlayerData.name;
 
-    loopPlayerNames: for(let arrayIndex = 0; arrayIndex < game.players.length; arrayIndex++){
-        if(game.players[arrayIndex].name == playerName){
-            game.players[arrayIndex].audio = audioData;
-            game.players[arrayIndex].answer = correctAnswer;
-            game.players[arrayIndex].playerReady = true;
-            res.status(200);
-            break loopPlayerNames;
-        }
-        else{res.status(404);}
+    //checks if player exists
+    let player = game.players.find(player => player.name == playerName);
+    if(!player) {
+        return res.status(404).send();
     }
 
+    //assigns data to player properties
+    player.audio = audioData;
+    player.answer = correctAnswer;
+    player.playerReady = true;
     res.send();
 });
 
 app.get("/game/current/getAudio", (req, res) => {
-    loopPlayerNames: for(let arrayIndex = 0; arrayIndex < game.players.length; arrayIndex++){
-        if(game.players[arrayIndex].name == playerName){
-            let path = game.players[arrayIndex].audio.file;
-            let contentsOfPath = fs.readFileSync(path);
-            res.send(contentsOfPath);
-            res.status(200);
-            break loopPlayerNames;
-        }
-        else{res.status(404);}
+    let player = game.players.find(player => player.name == playerName);
+    if(!player) {
+        return res.status(404).send();
     }
+
+    // works:
+    // let path = player.audio.file;
+    // let buffer = fs.readFileSync(path);
+    // res.send(buffer);
+
+    //works partially:
+    // let path = "C:\\Users\\haid0\\Documents\\party game\\assets\\audio\\aud.mp3"
+    let path = player.audio.file;
+    let buffer = fs.readFileSync(path);
+    let audioCtx = new WAA.AudioContext();
+
+    audioCtx.decodeAudioData(buffer, 
+        function(audioBuffer) {
+            Array.prototype.reverse.call( audioBuffer.getChannelData(0) );
+            Array.prototype.reverse.call( audioBuffer.getChannelData(1) );
+            let audioWav = audioBufferToWav(audioBuffer);
+            fs.writeFileSync("wavefile-dude.wav", Buffer.from(audioWav));
+            res.send(Buffer.from(audioWav));
+        },
+        function(err){
+            console.log("Error with decoding audio data: ", err);
+            res.status(500).send({error: "failed to decode audio"});
+        }
+    );
 });
 
 app.post("/game/current/start", (req, res) => {

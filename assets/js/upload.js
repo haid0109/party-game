@@ -58,27 +58,18 @@ function stopRecording(){
     startBtn.disabled = false;
 }
 
-async function handleData(audio){
-    /*
-    var blob = audio.data;
+async function handleData(event){
+    let blob = event.data;
     arrBuffer = await blob.arrayBuffer();
-    var context = new AudioContext();
-    var source = null;
-    
+    let context = new AudioContext();
+    let source = null;
+
     let buffer = await context.decodeAudioData(arrBuffer);
     source = context.createBufferSource();
     Array.prototype.reverse.call( buffer.getChannelData(0) );
     source.buffer = buffer;
     source.connect(context.destination);
     source.start();
-
-    let dd = source.buffer.getChannelData(0);
-    
-    var bb = new Blob([source.buffer.getChannelData(0)], {type: "audio/webm;codecs=opus"});
-    audioPlayer.src = URL.createObjectURL(bb);
-    console.log("succes", audio.data);
-    console.log("succes2", bb);
-    */
     
     //creates an object which contains the player name and correct answer, and converts it to JSON 
     let playerData = {
@@ -89,7 +80,7 @@ async function handleData(audio){
 
     //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
-    audioFormData.append("audio", audio.data, "audio.mp3");
+    audioFormData.append("audio", event.data, "audio.webm");
     audioFormData.append("playerData", stringifiedPlayerData);
 
     //posts the audio blob as formdata to the server
@@ -104,6 +95,7 @@ async function handleData(audio){
     fetch('http://localhost:9423/game/current/getAudio')
     .then((resp) => {
         resp.blob().then((audioData) => {
+            console.log("1:", audioData);
             audioPlayer.src = URL.createObjectURL(audioData);
         });
     })
