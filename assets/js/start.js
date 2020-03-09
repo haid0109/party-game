@@ -90,29 +90,29 @@ app.get("/game/current/getAudio", (req, res) => {
     }
 
     // works:
-    // let path = player.audio.file;
-    // let buffer = fs.readFileSync(path);
-    // res.send(buffer);
-
-    //works partially:
-    // let path = "C:\\Users\\haid0\\Documents\\party game\\assets\\audio\\aud.mp3"
     let path = player.audio.file;
     let buffer = fs.readFileSync(path);
-    let audioCtx = new WAA.AudioContext();
+    res.send(buffer);
 
-    audioCtx.decodeAudioData(buffer, 
-        function(audioBuffer) {
-            Array.prototype.reverse.call( audioBuffer.getChannelData(0) );
-            Array.prototype.reverse.call( audioBuffer.getChannelData(1) );
-            let audioWav = audioBufferToWav(audioBuffer);
-            fs.writeFileSync("wavefile-dude.wav", Buffer.from(audioWav));
-            res.send(Buffer.from(audioWav));
-        },
-        function(err){
-            console.log("Error with decoding audio data: ", err);
-            res.status(500).send({error: "failed to decode audio"});
-        }
-    );
+    //works partially:
+    // let path = player.audio.file;
+    // let path = "/home/alexandra/code/party-game/assets/audio/aud.mp3"
+    // let buffer = fs.readFileSync(path);
+    // let audioCtx = new WAA.AudioContext();
+
+    // audioCtx.decodeAudioData(buffer, 
+    //     function(audioBuffer) {
+    //         Array.prototype.reverse.call( audioBuffer.getChannelData(0) );
+    //         Array.prototype.reverse.call( audioBuffer.getChannelData(1) );
+    //         let audioWav = audioBufferToWav(audioBuffer);
+    //         fs.writeFileSync("wavefile-dude.wav", Buffer.from(audioWav));
+    //         res.send(Buffer.from(audioWav));
+    //     },
+    //     function(err){
+    //         console.log("Error with decoding audio data: ", err);
+    //         res.status(500).send({error: "failed to decode audio"});
+    //     }
+    // );
 });
 
 app.post("/game/current/start", (req, res) => {
