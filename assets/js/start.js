@@ -27,6 +27,8 @@ app.post("/game/current", express.json(), (req, res) => {
     game = {
         state: "initialized",
         players: [],
+        numberOfRounds: 0,
+        currentRound: 0,
     };
     game.players.push(req.body);
     game.state = "preround";
@@ -73,10 +75,11 @@ app.post("/game/current/postAudio", (req, res) => {
         return res.status(404).send();
     }
 
-    //assigns data to player properties
+    //assigns data
     player.audio = audioData;
     player.answer = correctAnswer;
     player.playerReady = true;
+    game.numberOfRounds++;
     res.send();
 });
 
@@ -119,7 +122,24 @@ app.post("/game/current/start", (req, res) => {
 });
 
 app.get("/game/current/question", (req, res) => {
-    res.send(game.sound[0]);
+    res.send(game.guessChecker[0]);
 });
+
+app.get("game/current/round", (req, res) => {
+    game.currentRound++;
+    if(game.currentRound > game.numberOfRounds){
+        res.sendStatus(404);
+        return;
+    }
+
+    let questionData = {
+        audio: game.players[game.currentRound -1].audio,
+        answer: game.players[game.currentRound -1].answer,    
+    }
+
+    res.send(questionData);
+    return;
+    
+})
 
 app.listen(9423);

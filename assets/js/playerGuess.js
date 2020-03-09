@@ -1,20 +1,40 @@
+const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
+
+async function soundDataFile(){
+    await fetch('http://localhost:9423/game/current/getAudio')
+    .then((resp) => {
+        resp.blob().then((audioData) => {
+            console.log(audioData);
+            URL.createObjectURL(audioData)
+            if(!audioData){
+                console.log("file not found");
+            }        
+        }); 
+    })
+    .catch((error) => { console.error('Error:', error); });
+    document.getElementById("player").value = "";
+}
+
 
 async function guessCheck(){
     await fetch('http://localhost:9423/game/current/question')
     .then((response) => {
         return response.json();
     })
-    .then((sound) => {
-        var checkTheGuess = document.getElementById("playerGuess").value;
-        let correctAnswer = sound.correctAnswer;
-        if(checkTheGuess == correctAnswer) {
-            document.getElementById("test").innerHTML = "Correct answer!";
+    .then((guessChecker) => {
+        let playersGuess = document.getElementById("playerGuess").value;
+        let correctAnswer = guessChecker.correctAnswer;
+        let highscore = 0;
+        if(playersGuess == correctAnswer) {
+            document.getElementById("test") = highscore++;;
         } else {
-            document.getElementById("test").innerHTML = "Wrong answer!";
+            document.getElementById("test") = highscore;
         }
     })
     .catch((error) => { console.error('Error:', error); });
 }
 
-document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html");
+window.addEventListener("load", () => soundDataFile());
+document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html" + window.location.search);
+
