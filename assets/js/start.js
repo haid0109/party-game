@@ -29,6 +29,7 @@ app.post("/game/current", express.json(), (req, res) => {
         players: [],
         numberOfRounds: 0,
         currentRound: 0,
+        questionHasBeenAnswered: false,
     };
     game.players.push(req.body);
     game.state = "preround";
