@@ -107,6 +107,7 @@ async function handleData(audioBlob){
         });
     })
     .catch((error) => {console.error('Error: ', error);});
+    document.getElementById("correct").value = "";
 }
 
 var x = document.getElementById("myAudio");
