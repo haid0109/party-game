@@ -9,6 +9,12 @@ let getUserMediaStream;
 let recordJsObj;
 
 function startRecording() {
+    correctAnswer = document.getElementById("correct").value;
+    if(!correctAnswer){
+        alert("you need to write a correct answer for your audio");
+        return;
+    }
+
     startBtn.disabled = true;
     stopBtn.disabled = false;
     let options = {
@@ -32,6 +38,12 @@ function startRecording() {
 }
 
 function stopRecording() {
+    correctAnswer = document.getElementById("correct").value;
+    if(!correctAnswer){
+        alert("you need to write a correct answer for your audio");
+        return;
+    }
+    
     stopBtn.disabled = true;
     startBtn.disabled = false;
     recordJsObj.stop(); 
