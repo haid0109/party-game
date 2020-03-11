@@ -94,7 +94,7 @@ app.post("/game/current/postAudio", (req, res) => {
         },
         function(err){
             console.log("Error with decoding audio data: ", err);
-            res.status(500).send();
+            res.status(500).send("Error with decoding audio data: ", err);
         }
     );
 });
@@ -110,8 +110,10 @@ app.get("/game/current/getAudio", (req, res) => {
 });
 
 app.post("/game/current/start", (req, res) => {
-    game.state = "in progress";
-    shuffleArray(game.players);
+    if(game.state != "in progress"){
+        game.state = "in progress";
+        shuffleArray(game.players);
+    }
     res.status(204).send("game in progress");
 });
 
