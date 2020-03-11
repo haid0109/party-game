@@ -1,11 +1,43 @@
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
+let audioPlayer = document.getElementById("player");
 
 const playerName = new URLSearchParams(window.location.search).get("name");
 let correctAnswer = null;
 
-let audioPlayer = document.getElementById("player");
-let recorder;
+let getUserMediaStream;
+let recordJsObj;
+
+function startRecording() {
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    let options = {
+        audio: true,
+        video: false
+    };
+
+    navigator.mediaDevices.getUserMedia(options)
+    .then(function(stream) {
+        getUserMediaStream = stream;
+        let audioCtx = new AudioContext;
+        let sourceNode = audioCtx.createMediaStreamSource(stream);
+        recordJsObj = new Recorder(sourceNode, { numChannels: 2 });
+        recordJsObj.record();
+    })
+    .catch(function(err) {
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        alert("error: " + err);
+    });
+}
+
+function stopRecording() {
+    stopBtn.disabled = true;
+    startBtn.disabled = false;
+    recordJsObj.stop(); 
+    getUserMediaStream.getAudioTracks()[0].stop();
+    recordJsObj.exportWAV(handleData);
+}
 
 function checkCompatibility(){
     if (!!navigator.mediaDevices.getUserMedia) {
@@ -17,7 +49,6 @@ function checkCompatibility(){
                     if(devices[index].kind == "audioinput") 
                     {
                         startBtn.disabled = false;
-                        startBtn.addEventListener("click", record);
                         return;
                     }
                 }
@@ -35,52 +66,17 @@ function checkCompatibility(){
     else { alert('Your browser does not support access to your microphone. Update or change browser'); }
 }
 
-function record(){
-    correctAnswer = document.getElementById("correct").value;
-    if(!correctAnswer){
-        alert("you need to write a correct answer for your audio");
-        return;
-    }
-    startBtn.disabled = true;
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-    .then((stream) => {
-        recorder = new MediaRecorder(stream);
-        recorder.start();
-        stopBtn.disabled = false
-        stopBtn.addEventListener("click", stopRecording);
-        recorder.addEventListener("dataavailable", handleData);
-    });
-}
-
-function stopRecording(){
-    recorder.stop();
-    stopBtn.disabled = true;
-    startBtn.disabled = false;
-}
-
-async function handleData(event){
-    let blob = event.data;
-    arrBuffer = await blob.arrayBuffer();
-    let context = new AudioContext();
-    let source = null;
-
-    let buffer = await context.decodeAudioData(arrBuffer);
-    source = context.createBufferSource();
-    Array.prototype.reverse.call( buffer.getChannelData(0) );
-    source.buffer = buffer;
-    source.connect(context.destination);
-    source.start();
-    
+async function handleData(audioBlob){ 
     //creates an object which contains the player name and correct answer, and converts it to JSON 
     let playerData = {
         name: playerName,
         answer: correctAnswer,
-    }
+    };
     let stringifiedPlayerData = JSON.stringify(playerData);
 
     //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
-    audioFormData.append("audio", event.data, "audio.webm");
+    audioFormData.append("audio", audioBlob, "audio.wav");
     audioFormData.append("playerData", stringifiedPlayerData);
 
     //posts the audio blob as formdata to the server
@@ -95,11 +91,10 @@ async function handleData(event){
     fetch('http://localhost:9423/game/current/getAudio')
     .then((resp) => {
         resp.blob().then((audioData) => {
-            console.log("1:", audioData);
             audioPlayer.src = URL.createObjectURL(audioData);
         });
     })
-    .catch((error) => { console.error('Error:', error); });
+    .catch((error) => { console.error('Error: ', error); });
     document.getElementById("correct").value = "";
 }
 
@@ -113,21 +108,8 @@ var x = document.getElementById("myAudio");
         }
 
 window.addEventListener("load", checkCompatibility);
-document.getElementById("done").addEventListener("click", () => window.location.href = "waitingRoom.html" + window.location.search);
-
-// const player = document.getElementById('player');
-// const handleSuccess = function(stream) {
-    //     if (window.URL) { player.srcObject = stream; } 
-//     else { player.src = stream; }
-// };
-// navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-// .then(handleSuccess);
-
-// let options = { 
-        //     audio: true,
-        //     video: false
-        // };
-        
-        // navigator.mediaDevices.getUserMedia(options)
-        // .then(audioStream => {
-        // });
+startBtn.addEventListener("click", startRecording);
+stopBtn.addEventListener("click", stopRecording);
+document.getElementById("done").addEventListener("click", () => {
+    window.location.href = "waitingRoom.html" + window.location.search;
+});

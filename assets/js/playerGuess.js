@@ -1,5 +1,6 @@
 const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
+let audio = document.getElementById()
 
 async function soundDataFile(){
     await fetch('http://localhost:9423/game/current/getAudio')
