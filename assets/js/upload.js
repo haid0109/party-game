@@ -94,7 +94,7 @@ async function handleData(audioBlob){
             audioPlayer.src = URL.createObjectURL(audioData);
         });
     })
-    .catch((error) => { console.error('Error: ', error); });
+    .catch((error) => {console.error('Error: ', error);});
     document.getElementById("correct").value = "";
 }
 
