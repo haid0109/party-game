@@ -1,12 +1,46 @@
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
+let speedUpBtn = document.getElementById("speedUpButton")
+let reverseBtn = document.getElementById("reverseButton")
+let slowDownBtn = document.getElementById("slowDownButton")
+let uploadAudioBtn = document.getElementById("uploadAudioButton");
 let audioPlayer = document.getElementById("player");
+let finishedBtn = document.getElementById("finishedButton");
 
 const playerName = new URLSearchParams(window.location.search).get("name");
 let correctAnswer = null;
+let audioSpeed = 1;
+let audioReverse = false;
 
 let getUserMediaStream;
 let recordJsObj;
+
+function checkCompatibility(){
+    if (!!navigator.mediaDevices.getUserMedia) {
+        navigator.getUserMedia({video: false, audio: true}, function(){
+            navigator.mediaDevices.enumerateDevices()
+            .then(function(devices) {
+                for(let index = 0; index < devices.length; index++)
+                {
+                    if(devices[index].kind == "audioinput") 
+                    {
+                        startBtn.disabled = false;
+                        return;
+                    }
+                }
+                alert("You do not have an audio input plugged into your device. Please plug an audio input and reload the site.");
+            })
+            .catch(function(err) {
+                alert("error: " + err);
+            });			
+        },
+        function()
+        { 
+            alert("Your browser has blocked microphone access. Change your permissions to allow access to your microphone, and reload the site") 
+        });
+    } 
+    else { alert('Your browser does not support access to your microphone. Update or change browser'); }
+}
 
 function startRecording() {
     correctAnswer = document.getElementById("correct").value;
@@ -48,41 +82,35 @@ function stopRecording() {
     startBtn.disabled = false;
     recordJsObj.stop(); 
     getUserMediaStream.getAudioTracks()[0].stop();
-    recordJsObj.exportWAV(handleData);
+
+    speedUpBtn.disabled = false;
+    reverseBtn.disabled = false;
+    slowDownBtn.disabled = false;
+    uploadAudioBtn.disabled = false;
 }
 
-function checkCompatibility(){
-    if (!!navigator.mediaDevices.getUserMedia) {
-        navigator.getUserMedia({video: false, audio: true}, function(){
-            navigator.mediaDevices.enumerateDevices()
-            .then(function(devices) {
-                for(let index = 0; index < devices.length; index++)
-                {
-                    if(devices[index].kind == "audioinput") 
-                    {
-                        startBtn.disabled = false;
-                        return;
-                    }
-                }
-                alert("You do not have an audio input plugged into your device. Please plug an audio input and reload the site.");
-            })
-            .catch(function(err) {
-                alert("error: " + err);
-            });			
-        },
-        function()
-        { 
-            alert("Your browser has blocked microphone access. Change your permissions to allow access to your microphone, and reload the site") 
-        });
-    } 
-    else { alert('Your browser does not support access to your microphone. Update or change browser'); }
+function speedUpAudio(){
+    if(audioSpeed == 0.5){ audioSpeed = 1; }
+    else { audioSpeed = 0.5; }
 }
 
-async function handleData(audioBlob){ 
+function reverseAudio(){
+    if(audioReverse == true){ audioReverse = false; }
+    else { audioReverse = true; }
+}
+
+function slowDownAudio(){
+    if(audioSpeed == 2.5){ audioSpeed = 1; }
+    else { audioSpeed = 2.5; }
+}
+
+async function handleDataUpload(audioBlob){ 
     //creates an object which contains the player name and correct answer, and converts it to JSON 
     let playerData = {
         name: playerName,
         answer: correctAnswer,
+        speed: audioSpeed,
+        reverse: audioReverse,
     };
     let stringifiedPlayerData = JSON.stringify(playerData);
 
@@ -109,18 +137,16 @@ async function handleData(audioBlob){
     .catch((error) => {console.error('Error: ', error);});
 }
 
-var x = document.getElementById("myAudio");
-
-        function setPlaySpeedFast() { 
-            x.playbackRate = 2;
-        }
-        function setPlaySpeedSlow() { 
-            x.playbackRate = 0.5;
-        }
-
 window.addEventListener("load", checkCompatibility);
 startBtn.addEventListener("click", startRecording);
 stopBtn.addEventListener("click", stopRecording);
-document.getElementById("done").addEventListener("click", () => {
+speedUpBtn.addEventListener("click", speedUpAudio);
+reverseBtn.addEventListener("click", reverseAudio);
+slowDownBtn.addEventListener("click", slowDownAudio);
+uploadAudioBtn.addEventListener("click", () => {
+    recordJsObj.exportWAV(handleDataUpload);
+    finishedBtn.disabled = false;
+});
+finishedBtn.addEventListener("click", () => {
     window.location.href = "waitingRoom.html" + window.location.search;
 });

@@ -19,10 +19,12 @@
         <input id="correct" type="text" placeholder="Correct answer (what did you upload)">
         <h1>Add effect!</h1>
         <div class="flex-buttons">
-            <button onclick="setPlaySpeedFast()" type="button">Fast playspeed</button>
-            <button onclick="setPlaySpeedSlow()" type="button">Slow playspeed</button>    
+            <button id="speedUpButton" type="button" disabled>Speed up audio</button>
+            <button id="reverseButton" type="button" disabled>Reverse audio</button>
+            <button id="slowDownButton" type="button" disabled>Slow down audio</button>    
         </div>
-        <input id="done" type="submit" value="done">
+        <input id="uploadAudioButton" value="upload audio" disabled>
+        <input id="finishedButton" type="submit" value="go to waiting room" disabled>
     </div>
     <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
     <script src="assets/js/upload.js"></script>
