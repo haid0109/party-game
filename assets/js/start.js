@@ -64,9 +64,11 @@ busboy.extend(app, {
 });
 
 app.post("/game/current/postAudio", (req, res) => {
+    let audioDataPath = req.files.audio.file;
     let parsedPlayerData = JSON.parse(req.body.playerData);
     let correctAnswer = parsedPlayerData.answer;
-    let audioDataPath = req.files.audio.file;
+    let audioSpeed = parsedPlayerData.speed;
+    let audioReverse = parsedPlayerData.reverse;
     playerName = parsedPlayerData.name;
 
     //checks if player exists
@@ -78,25 +80,28 @@ app.post("/game/current/postAudio", (req, res) => {
     //assigns data
     player.audioPath = audioDataPath;
     player.answer = correctAnswer;
+    player.speed = audioSpeed; //test 
     player.playerReady = true;
     game.numberOfRounds++;
     
     //reverses audio data
-    let buffer = fs.readFileSync(audioDataPath);
-    let audioCtx = new WAA.AudioContext();
-    audioCtx.decodeAudioData(buffer, 
-        function(audioBuffer) {
-            Array.prototype.reverse.call( audioBuffer.getChannelData(0) );
-            Array.prototype.reverse.call( audioBuffer.getChannelData(1) );
-            let arrayBufferWav = audioBufferToWav(audioBuffer);
-            fs.writeFileSync(audioDataPath, Buffer.from(arrayBufferWav));
-            res.send();
-        },
-        function(err){
-            console.log("Error with decoding audio data: ", err);
-            res.status(500).send("Error with decoding audio data: ", err);
-        }
-    );
+    if(audioReverse){
+        let buffer = fs.readFileSync(audioDataPath);
+        let audioCtx = new WAA.AudioContext();
+        audioCtx.decodeAudioData(buffer, 
+            function(audioBuffer) {
+                Array.prototype.reverse.call( audioBuffer.getChannelData(0) );
+                Array.prototype.reverse.call( audioBuffer.getChannelData(1) );
+                let arrayBufferWav = audioBufferToWav(audioBuffer);
+                fs.writeFileSync(audioDataPath, Buffer.from(arrayBufferWav));
+            },
+            function(err){
+                console.log("Error with decoding audio data: ", err);
+                res.status(500); //does not work
+            }
+        );
+    }
+    res.send(); //only sends status 200, even if status is set to 500
 });
 
 app.get("/game/current/getAudio", (req, res) => {

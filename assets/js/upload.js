@@ -89,19 +89,19 @@ function stopRecording() {
     uploadAudioBtn.disabled = false;
 }
 
-function speedUpAudio(){
+function slowDownAudio(){
     if(audioSpeed == 0.5){ audioSpeed = 1; }
     else { audioSpeed = 0.5; }
+}
+
+function speedUpAudio(){
+    if(audioSpeed == 2.5){ audioSpeed = 1; }
+    else { audioSpeed = 2.5; }
 }
 
 function reverseAudio(){
     if(audioReverse == true){ audioReverse = false; }
     else { audioReverse = true; }
-}
-
-function slowDownAudio(){
-    if(audioSpeed == 2.5){ audioSpeed = 1; }
-    else { audioSpeed = 2.5; }
 }
 
 async function handleDataUpload(audioBlob){ 
