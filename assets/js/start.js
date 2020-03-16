@@ -1,14 +1,12 @@
 const express = require("express");
-const path = require('path');
-const busboy = require('express-busboy');
-const fs = require('fs');
-const WAA = require('web-audio-api');
-const stream = require('stream');
 const app = express();
+const path = require("path");
+const busboy = require("express-busboy");
+const fs = require("fs");
+const WAA = require("web-audio-api");
 const audioBufferToWav = require("audiobuffer-to-wav");
 
 let game = null;
-let playerName = null;
 
 function shuffleArray(array) {
     for (let arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
@@ -66,9 +64,11 @@ busboy.extend(app, {
 
 app.post("/game/current/postAudio", (req, res) => {
     let parsedPlayerData = JSON.parse(req.body.playerData);
+    let playerName = parsedPlayerData.name;
     let correctAnswer = parsedPlayerData.answer;
-    let audioData = req.files.audio;
-    playerName = parsedPlayerData.name;
+    let audioSpeed = parsedPlayerData.speed;
+    let audioReverse = parsedPlayerData.reverse;
+    let audioDataPath = req.files.audio.file;
 
     //checks if player exists
     let player = game.players.find(player => player.name == playerName);
@@ -77,48 +77,57 @@ app.post("/game/current/postAudio", (req, res) => {
     }
 
     //assigns data
-    player.audio = audioData;
+    player.audioPath = audioDataPath;
     player.answer = correctAnswer;
+    player.speed = audioSpeed;
+    player.reverse = audioReverse;
     player.playerReady = true;
     game.numberOfRounds++;
-    res.send();
+    
+    //reverses audio data
+    if(audioReverse){
+        let buffer = fs.readFileSync(audioDataPath);
+        let audioCtx = new WAA.AudioContext();
+        audioCtx.decodeAudioData(buffer, 
+            function(audioBuffer) {
+                Array.prototype.reverse.call( audioBuffer.getChannelData(0) );
+                Array.prototype.reverse.call( audioBuffer.getChannelData(1) );
+                let arrayBufferWav = audioBufferToWav(audioBuffer);
+                fs.writeFileSync(audioDataPath, Buffer.from(arrayBufferWav));
+            },
+            function(err){
+                console.log("Error with decoding audio data: ", err);
+                res.status(500); //does not work
+            }
+        );
+    }
+    res.send(); //only sends status 200, even if status is set to 500
 });
 
-app.get("/game/current/getAudio", (req, res) => {
+app.get("/game/current/getAudio/:playerName", (req, res) => {
+    let playerName = req.params.playerName
     let player = game.players.find(player => player.name == playerName);
     if(!player) {
         return res.status(404).send();
     }
-
-    // works:
-    let path = player.audio.file;
-    let buffer = fs.readFileSync(path);
+    let buffer = fs.readFileSync(player.audioPath);
     res.send(buffer);
+});
 
-    //works partially:
-    // let path = player.audio.file;
-    // let path = "/home/alexandra/code/party-game/assets/audio/aud.mp3"
-    // let buffer = fs.readFileSync(path);
-    // let audioCtx = new WAA.AudioContext();
-
-    // audioCtx.decodeAudioData(buffer, 
-    //     function(audioBuffer) {
-    //         Array.prototype.reverse.call( audioBuffer.getChannelData(0) );
-    //         Array.prototype.reverse.call( audioBuffer.getChannelData(1) );
-    //         let audioWav = audioBufferToWav(audioBuffer);
-    //         fs.writeFileSync("wavefile-dude.wav", Buffer.from(audioWav));
-    //         res.send(Buffer.from(audioWav));
-    //     },
-    //     function(err){
-    //         console.log("Error with decoding audio data: ", err);
-    //         res.status(500).send({error: "failed to decode audio"});
-    //     }
-    // );
+app.get("/game/current/getAudioSpeed/:playerName", (req, res) => {
+    let playerName = req.params.playerName
+    let player = game.players.find(player => player.name == playerName);
+    if(!player) {
+        return res.status(404).send();
+    }
+    res.send({speed: player.speed});
 });
 
 app.post("/game/current/start", (req, res) => {
-    game.state = "in progress";
-    shuffleArray(game.players);
+    if(game.state != "in progress"){
+        game.state = "in progress";
+        shuffleArray(game.players);
+    }
     res.status(204).send("game in progress");
 });
 
@@ -150,7 +159,6 @@ app.get("/game/current/round", (req, res) => {
 
     res.send(questionData);
     return;
-    
 })
 
 app.listen(9423);

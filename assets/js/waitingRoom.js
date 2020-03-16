@@ -48,7 +48,7 @@ async function startGame(){
             alert("something went wrong");
             return;
         }
-        window.location.href = "playerGuess.html" + window.location.search + "&round=1dasdasda";
+        window.location.href = "playerGuess.html" + window.location.search;
     })
     .catch((error) => { console.error('Error:', error); });  
 }

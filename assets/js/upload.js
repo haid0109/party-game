@@ -1,11 +1,19 @@
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
+let speedUpBtn = document.getElementById("speedUpButton")
+let reverseBtn = document.getElementById("reverseButton")
+let slowDownBtn = document.getElementById("slowDownButton")
+let uploadAudioBtn = document.getElementById("uploadAudioButton");
+let audioPlayer = document.getElementById("player");
+let finishedBtn = document.getElementById("finishedButton");
 
 const playerName = new URLSearchParams(window.location.search).get("name");
 let correctAnswer = null;
+let audioSpeed = 1;
+let audioReverse = false;
 
-let audioPlayer = document.getElementById("player");
-let recorder;
+let getUserMediaStream;
+let recordJsObj;
 
 function checkCompatibility(){
     if (!!navigator.mediaDevices.getUserMedia) {
@@ -17,7 +25,6 @@ function checkCompatibility(){
                     if(devices[index].kind == "audioinput") 
                     {
                         startBtn.disabled = false;
-                        startBtn.addEventListener("click", record);
                         return;
                     }
                 }
@@ -35,52 +42,81 @@ function checkCompatibility(){
     else { alert('Your browser does not support access to your microphone. Update or change browser'); }
 }
 
-function record(){
+function startRecording() {
     correctAnswer = document.getElementById("correct").value;
     if(!correctAnswer){
         alert("you need to write a correct answer for your audio");
         return;
     }
+
     startBtn.disabled = true;
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-    .then((stream) => {
-        recorder = new MediaRecorder(stream);
-        recorder.start();
-        stopBtn.disabled = false
-        stopBtn.addEventListener("click", stopRecording);
-        recorder.addEventListener("dataavailable", handleData);
+    stopBtn.disabled = false;
+    let options = {
+        audio: true,
+        video: false
+    };
+
+    navigator.mediaDevices.getUserMedia(options)
+    .then(function(stream) {
+        getUserMediaStream = stream;
+        let audioCtx = new AudioContext;
+        let sourceNode = audioCtx.createMediaStreamSource(stream);
+        recordJsObj = new Recorder(sourceNode, { numChannels: 2 });
+        recordJsObj.record();
+    })
+    .catch(function(err) {
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        alert("error: " + err);
     });
 }
 
-function stopRecording(){
-    recorder.stop();
+function stopRecording() {
+    correctAnswer = document.getElementById("correct").value;
+    if(!correctAnswer){
+        alert("you need to write a correct answer for your audio");
+        return;
+    }
+    
     stopBtn.disabled = true;
     startBtn.disabled = false;
+    recordJsObj.stop(); 
+    getUserMediaStream.getAudioTracks()[0].stop();
+
+    speedUpBtn.disabled = false;
+    reverseBtn.disabled = false;
+    slowDownBtn.disabled = false;
+    uploadAudioBtn.disabled = false;
 }
 
-async function handleData(event){
-    let blob = event.data;
-    arrBuffer = await blob.arrayBuffer();
-    let context = new AudioContext();
-    let source = null;
+function slowDownAudio(){
+    if(audioSpeed == 0.5){ audioSpeed = 1; }
+    else { audioSpeed = 0.5; }
+}
 
-    let buffer = await context.decodeAudioData(arrBuffer);
-    source = context.createBufferSource();
-    Array.prototype.reverse.call( buffer.getChannelData(0) );
-    source.buffer = buffer;
-    source.connect(context.destination);
-    source.start();
-    
+function speedUpAudio(){
+    if(audioSpeed == 2.5){ audioSpeed = 1; }
+    else { audioSpeed = 2.5; }
+}
+
+function reverseAudio(){
+    if(audioReverse == true){ audioReverse = false; }
+    else { audioReverse = true; }
+}
+
+async function handleDataUpload(audioBlob){ 
     //creates an object which contains the player name and correct answer, and converts it to JSON 
     let playerData = {
         name: playerName,
         answer: correctAnswer,
-    }
+        speed: audioSpeed,
+        reverse: audioReverse,
+    };
     let stringifiedPlayerData = JSON.stringify(playerData);
 
     //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
-    audioFormData.append("audio", event.data, "audio.webm");
+    audioFormData.append("audio", audioBlob, "audio.wav");
     audioFormData.append("playerData", stringifiedPlayerData);
 
     //posts the audio blob as formdata to the server
@@ -88,46 +124,39 @@ async function handleData(event){
         method: 'POST',
         body: audioFormData
     })
-    .then((resp) => {console.log(resp.status);})
+    .then((resp) => {console.log("post audio: ", resp.status);})
     .catch((error) => { console.error('Error:', error); });
 
     //gets the audio blob from the server and populates an audio tag in the frontend with it
-    fetch('http://localhost:9423/game/current/getAudio')
+    await fetch('http://localhost:9423/game/current/getAudio/' + playerName)
     .then((resp) => {
+        console.log("get audio: ", resp.status);
         resp.blob().then((audioData) => {
-            console.log("1:", audioData);
             audioPlayer.src = URL.createObjectURL(audioData);
         });
     })
-    .catch((error) => { console.error('Error:', error); });
-    document.getElementById("correct").value = "";
+    .catch((error) => {console.error('Error: ', error);});
+    
+    fetch('http://localhost:9423/game/current/getAudioSpeed/' + playerName)
+    .then((resp) => {
+        console.log("get audio speed: ", resp.status);
+        resp.json().then((audioSpeedObj) => {
+            audioPlayer.playbackRate = audioSpeedObj.speed;
+        });
+    })
+    .catch((error) => {console.error('Error: ', error);});
 }
 
-var x = document.getElementById("myAudio");
-
-        function setPlaySpeedFast() { 
-            x.playbackRate = 2;
-        }
-        function setPlaySpeedSlow() { 
-            x.playbackRate = 0.5;
-        }
-
 window.addEventListener("load", checkCompatibility);
-document.getElementById("done").addEventListener("click", () => window.location.href = "waitingRoom.html" + window.location.search);
-
-// const player = document.getElementById('player');
-// const handleSuccess = function(stream) {
-    //     if (window.URL) { player.srcObject = stream; } 
-//     else { player.src = stream; }
-// };
-// navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-// .then(handleSuccess);
-
-// let options = { 
-        //     audio: true,
-        //     video: false
-        // };
-        
-        // navigator.mediaDevices.getUserMedia(options)
-        // .then(audioStream => {
-        // });
+startBtn.addEventListener("click", startRecording);
+stopBtn.addEventListener("click", stopRecording);
+speedUpBtn.addEventListener("click", speedUpAudio);
+reverseBtn.addEventListener("click", reverseAudio);
+slowDownBtn.addEventListener("click", slowDownAudio);
+uploadAudioBtn.addEventListener("click", () => {
+    recordJsObj.exportWAV(handleDataUpload);
+    finishedBtn.disabled = false;
+});
+finishedBtn.addEventListener("click", () => {
+    window.location.href = "waitingRoom.html" + window.location.search;
+});
