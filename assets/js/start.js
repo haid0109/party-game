@@ -7,7 +7,6 @@ const WAA = require("web-audio-api");
 const audioBufferToWav = require("audiobuffer-to-wav");
 
 let game = null;
-let playerName = null;
 
 function shuffleArray(array) {
     for (let arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
@@ -64,12 +63,12 @@ busboy.extend(app, {
 });
 
 app.post("/game/current/postAudio", (req, res) => {
-    let audioDataPath = req.files.audio.file;
     let parsedPlayerData = JSON.parse(req.body.playerData);
+    let playerName = parsedPlayerData.name;
     let correctAnswer = parsedPlayerData.answer;
     let audioSpeed = parsedPlayerData.speed;
     let audioReverse = parsedPlayerData.reverse;
-    playerName = parsedPlayerData.name;
+    let audioDataPath = req.files.audio.file;
 
     //checks if player exists
     let player = game.players.find(player => player.name == playerName);
@@ -80,7 +79,8 @@ app.post("/game/current/postAudio", (req, res) => {
     //assigns data
     player.audioPath = audioDataPath;
     player.answer = correctAnswer;
-    player.speed = audioSpeed; //test 
+    player.speed = audioSpeed;
+    player.reverse = audioReverse;
     player.playerReady = true;
     game.numberOfRounds++;
     
@@ -104,14 +104,23 @@ app.post("/game/current/postAudio", (req, res) => {
     res.send(); //only sends status 200, even if status is set to 500
 });
 
-app.get("/game/current/getAudio", (req, res) => {
+app.get("/game/current/getAudio/:playerName", (req, res) => {
+    let playerName = req.params.playerName
     let player = game.players.find(player => player.name == playerName);
     if(!player) {
         return res.status(404).send();
     }
-
     let buffer = fs.readFileSync(player.audioPath);
     res.send(buffer);
+});
+
+app.get("/game/current/getAudioSpeed/:playerName", (req, res) => {
+    let playerName = req.params.playerName
+    let player = game.players.find(player => player.name == playerName);
+    if(!player) {
+        return res.status(404).send();
+    }
+    res.send({speed: player.speed});
 });
 
 app.post("/game/current/start", (req, res) => {

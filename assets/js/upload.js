@@ -124,14 +124,24 @@ async function handleDataUpload(audioBlob){
         method: 'POST',
         body: audioFormData
     })
-    .then((resp) => {console.log(resp.status);})
+    .then((resp) => {console.log("post audio: ", resp.status);})
     .catch((error) => { console.error('Error:', error); });
 
     //gets the audio blob from the server and populates an audio tag in the frontend with it
-    fetch('http://localhost:9423/game/current/getAudio')
+    await fetch('http://localhost:9423/game/current/getAudio/' + playerName)
     .then((resp) => {
+        console.log("get audio: ", resp.status);
         resp.blob().then((audioData) => {
             audioPlayer.src = URL.createObjectURL(audioData);
+        });
+    })
+    .catch((error) => {console.error('Error: ', error);});
+    
+    fetch('http://localhost:9423/game/current/getAudioSpeed/' + playerName)
+    .then((resp) => {
+        console.log("get audio speed: ", resp.status);
+        resp.json().then((audioSpeedObj) => {
+            audioPlayer.playbackRate = audioSpeedObj.speed;
         });
     })
     .catch((error) => {console.error('Error: ', error);});
