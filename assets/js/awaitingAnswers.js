@@ -48,6 +48,26 @@ async function displayPlayersInColumn1(){
     .catch((error) => { console.error('Error:', error); });
 }
 
+// const players = game.players;
+
+// players.forEach(function() {
+//   if (players.questionHasBeenAnswered == false) {
+//     startNextRound();
+//     return;
+//   }
+// });
+
+async function startNextRound(){
+    await fetch('http://localhost:9423/game/current/round')
+    .then((response) => {
+        return response.json();
+    })
+    .then((nextRound) => {
+        
+    })
+    .catch((error) => { console.error('Error:', error); });
+}
+
 
 
 window.addEventListener("load", () => displayPlayersInColumn1(), false);
