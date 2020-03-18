@@ -6,7 +6,7 @@ window.addEventListener("load", async function(){
     .catch((error) => { console.error('Error:', error); });
     if(status == 200){
         document.getElementById("newGame").style.display = "none";
-        document.getElementById("message").innerHTML = "Game is in progress. Join game?";
+        document.getElementById("message").innerHTML = "Game is in preround. Join game?";
     }
     else if(status == 403){
         document.getElementById("joinGame").style.display = "none";

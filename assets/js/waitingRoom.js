@@ -45,7 +45,7 @@ async function startGame(){
     .then((response) => {
         if(response.status == 404)
         {
-            alert("something went wrong");
+            alert("all players must be ready to start the game");
             return;
         }
         window.location.href = "playerGuess.html" + window.location.search;
@@ -53,7 +53,20 @@ async function startGame(){
     .catch((error) => { console.error('Error:', error); });  
 }
 
+function checkGameState(){
+    fetch('http://localhost:9423/game/current/state')
+    .then((resp) => {
+        resp.json().then((gameState) => {
+            if(gameState.state == "in progress"){
+                window.location.href = "playerGuess.html" + window.location.search;
+            }
+        });
+    })
+    .catch((error) => {console.error('Error: ', error);});
+}
+
 window.addEventListener("load", () => displayPlayersInColumn1(), false);
 window.addEventListener("load", () => setInterval(displayPlayersInColumn1, 5000));
+window.addEventListener("load", () => setInterval(checkGameState, 5000));
 document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
 document.getElementById("startGame").addEventListener("click", () => startGame());

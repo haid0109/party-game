@@ -136,7 +136,8 @@ async function handleDataUpload(audioBlob){
         });
     })
     .catch((error) => {console.error('Error: ', error);});
-    
+
+    //gets the audio speed from the server and sets the playbackRate on the audio tag
     fetch('http://localhost:9423/game/current/getAudioSpeed/' + playerName)
     .then((resp) => {
         console.log("get audio speed: ", resp.status);

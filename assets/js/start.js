@@ -15,6 +15,16 @@ function shuffleArray(array) {
     }
 }
 
+function countNumOfRounds() {
+    let numOfPlayersReady = 0;
+    game.players.forEach(player => {
+        if(player.playerReady){
+            numOfPlayersReady++;
+        }
+    });
+    game.numberOfRounds = numOfPlayersReady;
+}
+
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -35,26 +45,31 @@ app.post("/game/current", express.json(), (req, res) => {
 });
 
 app.get("/game/current", (req, res) => {
-    if(game != null){
-        if(game.players.length <= 6){
+    if(!!game){
+        if(game.players.length < 6){
             res.send(game);
         }
-        else{ res.status(403).send("too many players. "+ game.players.length ); }
+        else{ res.status(403).send("too many players."); }
+    }
+    else{ res.status(404).send("there is no game"); }
+});
+
+app.get("/game/current/state", (req, res) => {
+    if(!!game){
+        res.send({state: game.state});
     }
     else{ res.status(404).send("there is no game"); }
 });
 
 app.post("/game/current/player", express.json(), (req, res) => {
-    if(game == null){res.status(404).send("there is no game");}
-    else{
-        if(game.players.length <= 6){
-            if(game.state == "preround"){
+    if(!!game){
+        if(game.players.length < 6){
                 game.players.push(req.body);
                 res.send();
-            }
         }
         else{res.status(403).send("too many players");}
     }
+    else{res.status(404).send("there is no game");}
 });
 
 busboy.extend(app, {
@@ -82,7 +97,6 @@ app.post("/game/current/postAudio", (req, res) => {
     player.speed = audioSpeed;
     player.reverse = audioReverse;
     player.playerReady = true;
-    game.numberOfRounds++;
     
     //reverses audio data
     if(audioReverse){
@@ -124,10 +138,12 @@ app.get("/game/current/getAudioSpeed/:playerName", (req, res) => {
 });
 
 app.post("/game/current/start", (req, res) => {
-    if(game.state != "in progress"){
-        game.state = "in progress";
-        shuffleArray(game.players);
+    countNumOfRounds()
+    if(game.numberOfRounds != game.players.length) {
+        return res.status(404).send("all players must be ready to start the game");
     }
+    game.state = "in progress";
+    shuffleArray(game.players);
     res.status(204).send("game in progress");
 });
 
