@@ -2,36 +2,14 @@ const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
 let audio = document.getElementById("player");
 
-let allEven = true;
-
-// const players = game.players;
-
-// players.forEach(function() {
-//   if (player.questionHasBeenAnswered == false) {
-//     startNextRound();
-//     return;
-//   }
-// });
-
-async function startNextRound(){
-    await fetch('')
-    .then((response) => {
-        return response.json();
-    })
-    .then((startNextRound) => {
-        
-    })
-    .catch((error) => { console.error('Error:', error); });
-}
 
 async function getCurrentRound(){
     await fetch('http://localhost:9423/game/current/round')
     .then((response) => {
         return response.json();
     })
-    .then((getCurrentRound) => {
-        let currentRound = getCurrentRound.currentRound;
-        document.getElementById("roundTitle").innerHTML = "Round" + currentRound;
+    .then((round) => {
+        document.getElementById("roundTitle").innerHTML = "Round " + round.currentRound;
     })
     .catch((error) => { console.error('Error:', error); });
 }
@@ -49,6 +27,17 @@ async function soundDataFile(){
     })
     .catch((error) => { console.error('Error:', error); });
     document.getElementById("player").value = "";
+}
+
+
+async function saveTheGuess(){
+    await fetch('http://localhost:9423/game/current/saveTheGuess', {
+        method:"POST",
+        body: {
+            playerGuess: document.getElementById("playerGuess").value,
+        }
+    })
+    .catch((error) => { console.error('Error:', error); });
 }
 
 
@@ -72,5 +61,7 @@ async function guessCheck(){
 
 window.addEventListener("load", () => getCurrentRound());
 window.addEventListener("load", () => soundDataFile());
-document.getElementById("begin").addEventListener("click", () => window.location.href = "awaitingAnswers.html" + window.location.search);
-
+document.getElementById("makeAGuess").addEventListener("click", async function(){
+    await saveTheGuess();
+    // window.location.href = "awaitingAnswers.html" + window.location.search
+});

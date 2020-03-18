@@ -30,7 +30,7 @@ input{
     padding-bottom: 20px;
 }
 
-#begin{
+#makeAGuess{
     background-color: rgb(247, 0, 255);
     box-shadow: 0 4px 4px 0 rgba(253, 253, 253, 0.603), 0 6px 20px 0 rgba(253, 253, 253, 0.603);
     border: none;
@@ -44,7 +44,7 @@ input{
     font-weight: bold;
 }
 
-#begin:hover, .flex-buttons button:hover{
+#makeAGuess:hover, .flex-buttons button:hover{
     background-color: rgb(184, 10, 190);
 }
 
