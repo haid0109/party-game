@@ -59,8 +59,22 @@ async function guessCheck(){
     .catch((error) => { console.error('Error:', error); });
 }
 
-window.addEventListener("load", () => getCurrentRound());
-window.addEventListener("load", () => soundDataFile());
+function checkIfNewGameStarted(){
+    fetch('http://localhost:9423/game/current/playerExist/' + playerName)
+    .then((resp) => {
+        if(resp.status == 404){
+            window.location.href = "index.html" + "?newGame=true";
+        }
+    })
+    .catch((error) => {console.error('Error: ', error);});
+}
+
+window.addEventListener("load", () => {
+    getCurrentRound()
+    soundDataFile()
+    checkIfNewGameStarted();
+    setInterval(checkIfNewGameStarted, 5000)
+});
 document.getElementById("makeAGuess").addEventListener("click", async function(){
     await saveTheGuess();
     // window.location.href = "awaitingAnswers.html" + window.location.search

@@ -8,6 +8,11 @@ const audioBufferToWav = require("audiobuffer-to-wav");
 
 let game = null;
 
+function checkIfPlayerExist(name){
+    let player = game.players.find(player => player.name == name);
+    return player;
+}
+
 function shuffleArray(array) {
     for (let arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
         const randomNum = Math.floor(Math.random() * (arrayIndex + 1));
@@ -49,7 +54,7 @@ app.get("/game/current", (req, res) => {
         if(game.players.length < 6){
             res.send(game);
         }
-        else{ res.status(403).send("too many players."); }
+        else{ res.status(403).send(game); }
     }
     else{ res.status(404).send("there is no game"); }
 });
@@ -72,6 +77,14 @@ app.post("/game/current/player", express.json(), (req, res) => {
     else{res.status(404).send("there is no game");}
 });
 
+app.get("/game/current/playerExist/:playerName", (req, res) => {
+    let playerName = req.params.playerName
+    if(!checkIfPlayerExist(playerName)){
+        return res.status(404).send();
+    }
+    res.send();
+});
+
 busboy.extend(app, {
     upload: true,
     allowedPath: "/game/current/postAudio",
@@ -86,7 +99,7 @@ app.post("/game/current/postAudio", (req, res) => {
     let audioDataPath = req.files.audio.file;
 
     //checks if player exists
-    let player = game.players.find(player => player.name == playerName);
+    let player = checkIfPlayerExist(playerName);
     if(!player) {
         return res.status(404).send();
     }
@@ -120,7 +133,7 @@ app.post("/game/current/postAudio", (req, res) => {
 
 app.get("/game/current/getAudio/:playerName", (req, res) => {
     let playerName = req.params.playerName
-    let player = game.players.find(player => player.name == playerName);
+    let player = checkIfPlayerExist(playerName);
     if(!player) {
         return res.status(404).send();
     }
@@ -130,7 +143,7 @@ app.get("/game/current/getAudio/:playerName", (req, res) => {
 
 app.get("/game/current/getAudioSpeed/:playerName", (req, res) => {
     let playerName = req.params.playerName
-    let player = game.players.find(player => player.name == playerName);
+    let player = checkIfPlayerExist(playerName);
     if(!player) {
         return res.status(404).send();
     }

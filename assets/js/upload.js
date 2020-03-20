@@ -148,7 +148,21 @@ async function handleDataUpload(audioBlob){
     .catch((error) => {console.error('Error: ', error);});
 }
 
+function checkIfNewGameStarted(){
+    fetch('http://localhost:9423/game/current/playerExist/' + playerName)
+    .then((resp) => {
+        if(resp.status == 404){
+            window.location.href = "index.html" + "?newGame=true";
+        }
+    })
+    .catch((error) => {console.error('Error: ', error);});
+}
+
 window.addEventListener("load", checkCompatibility);
+window.addEventListener("load", () => {
+    checkIfNewGameStarted();
+    setInterval(checkIfNewGameStarted, 5000)
+});
 startBtn.addEventListener("click", startRecording);
 stopBtn.addEventListener("click", stopRecording);
 speedUpBtn.addEventListener("click", speedUpAudio);
