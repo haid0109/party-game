@@ -173,7 +173,10 @@ app.get("/game/current/question", (req, res) => {
     res.send(game.guessChecker[0]);
 });
 
-app.get("/game/current/round", (req, res) => {
+app.get("/game/current/roundAudio", (req, res) => {
+    
+    
+    //does not work
     game.currentRound++;
     if(game.currentRound > game.numberOfRounds){
         res.sendStatus(404);
@@ -182,7 +185,6 @@ app.get("/game/current/round", (req, res) => {
 
     let questionData = {
         audio: game.players[game.currentRound -1].audio,
-        answer: game.players[game.currentRound -1].answer,
         currentRound: game.currentRound,    
     }
 

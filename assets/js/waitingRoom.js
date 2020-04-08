@@ -42,7 +42,7 @@ async function checkGameState(){
     .then((resp) => {
         resp.json().then((gameState) => {
             if(gameState.state == "in progress"){
-                window.location.href = "playerGuess.html" + window.location.search;
+                window.location.href = "playerGuess.html" + window.location.search + "&round=1";
             }
         });
     })
@@ -70,7 +70,7 @@ function startGame(){
             alert("all players must be ready to start the game");
             return;
         }
-        window.location.href = "playerGuess.html" + window.location.search;
+        window.location.href = "playerGuess.html" + window.location.search + "&round=1";
     })
     .catch((error) => { console.error('Error:', error); });  
 }

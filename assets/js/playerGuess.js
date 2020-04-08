@@ -1,10 +1,19 @@
 const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
+let newUrlParam = null;
 let audio = document.getElementById("player");
 
+async function setRoundData(){
+    document.getElementById("roundTitle").innerHTML = "Round " + roundNum;
+    let UrlParams = new URLSearchParams(window.location.search);
+    UrlParams.set("round", ++roundNum);
+    newUrlParam = "?" + UrlParams;
 
-async function getCurrentRound(){
-    await fetch('http://localhost:9423/game/current/round')
+    
+}
+
+async function getAudio(){
+    await fetch('http://localhost:9423/game/current/roundAudio')
     .then((response) => {
         return response.json();
     })
@@ -13,22 +22,6 @@ async function getCurrentRound(){
     })
     .catch((error) => { console.error('Error:', error); });
 }
-
-async function soundDataFile(){
-    await fetch('http://localhost:9423/game/current/getAudio')
-    .then((resp) => {
-        resp.blob().then((audioData) => {
-            console.log(audioData);
-            audio.src = URL.createObjectURL(audioData)
-            if(!audioData){
-                console.log("file not found");
-            }        
-        }); 
-    })
-    .catch((error) => { console.error('Error:', error); });
-    document.getElementById("player").value = "";
-}
-
 
 async function saveTheGuess(){
     await fetch('http://localhost:9423/game/current/saveTheGuess', {
@@ -70,12 +63,12 @@ function checkIfNewGameStarted(){
 }
 
 window.addEventListener("load", () => {
-    getCurrentRound()
-    soundDataFile()
+    setRoundData();
+    getAudio();
     checkIfNewGameStarted();
-    setInterval(checkIfNewGameStarted, 5000)
+    setInterval(checkIfNewGameStarted, 5000);
 });
 document.getElementById("makeAGuess").addEventListener("click", async function(){
     await saveTheGuess();
-    // window.location.href = "awaitingAnswers.html" + window.location.search
+    // window.location.href = "awaitingAnswers.html" + newUrlParam
 });
