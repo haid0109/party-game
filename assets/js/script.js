@@ -19,7 +19,7 @@ async function checkGameStatus(){
     else if(status == 403){
         document.getElementById("joinGame").style.display = "none";
         document.getElementById("newGame").style.display = "block";
-        document.getElementById("message").innerHTML = "Too many players. Start new game?";
+        document.getElementById("message").innerHTML = "Can't join the game. Start new game?";
     }
     else{
         document.getElementById("joinGame").style.display = "none";

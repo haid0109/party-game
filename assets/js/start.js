@@ -51,7 +51,7 @@ app.post("/game/current", express.json(), (req, res) => {
 
 app.get("/game/current", (req, res) => {
     if(!!game){
-        if(game.players.length < 6){
+        if((game.players.length < 6) && (game.state !== "in progress")){
             res.send(game);
         }
         else{ res.status(403).send(game); }
@@ -173,23 +173,21 @@ app.get("/game/current/question", (req, res) => {
     res.send(game.guessChecker[0]);
 });
 
-app.get("/game/current/roundAudio", (req, res) => {
-    
-    
-    //does not work
-    game.currentRound++;
-    if(game.currentRound > game.numberOfRounds){
-        res.sendStatus(404);
-        return;
+app.get("/game/current/roundAudio/:roundNum", (req, res) => {
+    let playerIndex = req.params.roundNum - 1;
+    if(!game.players[playerIndex]) {
+        return res.status(404).send();
     }
+    let buffer = fs.readFileSync(game.players[playerIndex].audioPath);
+    res.send(buffer);
+})
 
-    let questionData = {
-        audio: game.players[game.currentRound -1].audio,
-        currentRound: game.currentRound,    
+app.get("/game/current/roundAudioSpeed/:roundNum", (req, res) => {
+    let playerIndex = req.params.roundNum - 1;
+    if(!game.players[playerIndex]) {
+        return res.status(404).send();
     }
-
-    res.send(questionData);
-    return;
+    res.send({speed: game.players[playerIndex].speed});
 })
 
 app.listen(9423);
