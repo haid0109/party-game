@@ -160,19 +160,6 @@ app.post("/game/current/start", (req, res) => {
     res.status(204).send("game in progress");
 });
 
-app.post("/game/current/saveTheGuess", (req, res) =>{
-    game.players.playerGuess = [];
-    game.playerGuess.push(req.body);
-    if(!game.playerGuess){
-        res.sendStatus(400, "Invalid or Empty input");    
-    }
-    res.send("the guess has been posted");
-});
-
-app.get("/game/current/question", (req, res) => {
-    res.send(game.guessChecker[0]);
-});
-
 app.get("/game/current/roundAudio/:roundNum", (req, res) => {
     let playerIndex = req.params.roundNum - 1;
     if(!game.players[playerIndex]) {
@@ -188,6 +175,18 @@ app.get("/game/current/roundAudioSpeed/:roundNum", (req, res) => {
         return res.status(404).send();
     }
     res.send({speed: game.players[playerIndex].speed});
+})
+
+app.post("/game/current/saveTheGuess", express.json(), (req, res) => {
+    console.log("server test");
+    console.log("body", req.body);
+    res.send();
+    // game.playerGuess = [];
+    // game.playerGuess.push(req.body);
+    // if(!game.playerGuess){
+    //     res.sendStatus(400, "Invalid or Empty input");    
+    // }
+    // res.send("the guess has been posted");
 })
 
 app.listen(9423);

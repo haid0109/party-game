@@ -3,7 +3,7 @@ let roundNum = new URLSearchParams(window.location.search).get("round");
 let newUrlParam = null;
 let audioPlayer = document.getElementById("player");
 
-async function setRoundData(){
+function setRoundData(){
     document.getElementById("roundTitle").innerHTML = "Round " + roundNum;
 
     let newRoundNum = roundNum;
@@ -36,32 +36,24 @@ async function setAudioData(){
 }
 
 async function saveTheGuess(){
+    let playerName = new URLSearchParams(window.location.search).get("name");
+    guessDataObj = {
+        playerName: playerName,
+        roundNum: roundNum,
+        guess: document.getElementById("playerGuess").value,
+    }
+
+    console.log("client test1");
     await fetch('http://localhost:9423/game/current/saveTheGuess', {
-        method:"POST",
-        body: {
-            playerGuess: document.getElementById("playerGuess").value,
-        }
+        method:"POST",  
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(guessDataObj)
     })
+    .then((resp) => {
+        console.log(resp);
+    }) 
     .catch((error) => { console.error('Error:', error); });
-}
-
-
-async function guessCheck(){
-    await fetch('http://localhost:9423/game/current/question')
-    .then((response) => {
-        return response.json();
-    })
-    .then((guessChecker) => {
-        let playersGuess = document.getElementById("playerGuess").value;
-        let correctAnswer = guessChecker.correctAnswer;
-        let highscore = 0;
-        if(playersGuess == correctAnswer) {
-            document.getElementById("test") = highscore++;;
-        } else {
-            document.getElementById("test") = highscore;
-        }
-    })
-    .catch((error) => { console.error('Error:', error); });
+    console.log("client test2");
 }
 
 function checkIfNewGameStarted(){
@@ -82,5 +74,5 @@ window.addEventListener("load", () => {
 });
 document.getElementById("makeAGuess").addEventListener("click", async function(){
     saveTheGuess();
-    window.location.href = "awaitingAnswers.html" + newUrlParam
+    // window.location.href = "awaitingAnswers.html" + newUrlParam
 });
