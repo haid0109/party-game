@@ -1,19 +1,11 @@
 const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
-let newUrlParam = null;
 let audioPlayer = document.getElementById("player");
 
-function setRoundData(){
+async function setData(){
+    //displays the round number
     document.getElementById("roundTitle").innerHTML = "Round " + roundNum;
 
-    let newRoundNum = roundNum;
-    let UrlParams = new URLSearchParams(window.location.search);
-    
-    UrlParams.set("round", ++newRoundNum);
-    newUrlParam = "?" + UrlParams;
-}
-
-async function setAudioData(){
     //gets audio and sets it to the audio tag
     await fetch('http://localhost:9423/game/current/roundAudio/' + roundNum)
     .then((resp) => {
@@ -35,25 +27,19 @@ async function setAudioData(){
     .catch((error) => {console.error('Error: ', error);});
 }
 
-async function saveTheGuess(){
-    let playerName = new URLSearchParams(window.location.search).get("name");
+function saveTheGuess(){
     guessDataObj = {
         playerName: playerName,
         roundNum: roundNum,
         guess: document.getElementById("playerGuess").value,
     }
 
-    console.log("client test1");
-    await fetch('http://localhost:9423/game/current/saveTheGuess', {
+    fetch('http://localhost:9423/game/current/saveTheGuess', {
         method:"POST",  
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(guessDataObj)
     })
-    .then((resp) => {
-        console.log(resp);
-    }) 
     .catch((error) => { console.error('Error:', error); });
-    console.log("client test2");
 }
 
 function checkIfNewGameStarted(){
@@ -67,12 +53,12 @@ function checkIfNewGameStarted(){
 }
 
 window.addEventListener("load", () => {
-    setRoundData();
-    setAudioData();
+    setData();
     checkIfNewGameStarted();
     setInterval(checkIfNewGameStarted, 5000);
 });
-document.getElementById("makeAGuess").addEventListener("click", async function(){
+
+document.getElementById("makeAGuess").addEventListener("click", function(){
     saveTheGuess();
-    // window.location.href = "awaitingAnswers.html" + newUrlParam
+    window.location.href = "awaitingAnswers.html" + window.location.search;
 });

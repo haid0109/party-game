@@ -30,19 +30,20 @@ function countNumOfRounds() {
     game.numberOfRounds = numOfPlayersReady;
 }
 
+app.use(express.json());
+
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
 
-app.post("/game/current", express.json(), (req, res) => {
+app.post("/game/current", (req, res) => {
     game = {
         state: "initialized",
         players: [],
         numberOfRounds: 0,
-        currentRound: 0,
-        questionHasBeenAnswered: false,
+        playerGuess: {},
     };
     game.players.push(req.body);
     game.state = "preround";
@@ -51,7 +52,7 @@ app.post("/game/current", express.json(), (req, res) => {
 
 app.get("/game/current", (req, res) => {
     if(!!game){
-        if((game.players.length < 6) && (game.state !== "in progress")){
+        if((game.players.length < 6) && (game.state == "preround")){
             res.send(game);
         }
         else{ res.status(403).send(game); }
@@ -66,7 +67,7 @@ app.get("/game/current/state", (req, res) => {
     else{ res.status(404).send("there is no game"); }
 });
 
-app.post("/game/current/player", express.json(), (req, res) => {
+app.post("/game/current/player", (req, res) => {
     if(!!game){
         if(game.players.length < 6){
                 game.players.push(req.body);
@@ -167,7 +168,7 @@ app.get("/game/current/roundAudio/:roundNum", (req, res) => {
     }
     let buffer = fs.readFileSync(game.players[playerIndex].audioPath);
     res.send(buffer);
-})
+});
 
 app.get("/game/current/roundAudioSpeed/:roundNum", (req, res) => {
     let playerIndex = req.params.roundNum - 1;
@@ -175,18 +176,55 @@ app.get("/game/current/roundAudioSpeed/:roundNum", (req, res) => {
         return res.status(404).send();
     }
     res.send({speed: game.players[playerIndex].speed});
-})
+});
 
-app.post("/game/current/saveTheGuess", express.json(), (req, res) => {
-    console.log("server test");
-    console.log("body", req.body);
+app.post("/game/current/saveTheGuess", (req, res) => {
+    let roundNum = req.body.roundNum;
+    let guessDataObj = {
+        playerName: req.body.playerName,
+        guess: req.body.guess
+    }
+
+    if(!game.playerGuess["round" + roundNum]){ game.playerGuess["round" + roundNum] = []; }
+    game.playerGuess["round" + roundNum].push(guessDataObj);
     res.send();
-    // game.playerGuess = [];
-    // game.playerGuess.push(req.body);
-    // if(!game.playerGuess){
-    //     res.sendStatus(400, "Invalid or Empty input");    
-    // }
-    // res.send("the guess has been posted");
-})
+});
+
+app.get("/game/current/checkIfLastRound/:roundNum", (req, res) => {
+    let roundNum = req.params.roundNum
+    if(roundNum == game.numberOfRounds){res.send();}
+    else if(roundNum < game.numberOfRounds && roundNum > 0){res.status(404).send();}
+    else{res.status(403);}
+});
+
+app.get("/game/current/checkIfAllPlayersAnswered/:roundNum", (req, res) => {
+    let roundNum = req.params.roundNum
+    let numberOfPlayersAnswered = game.playerGuess["round" + roundNum].length;
+    if(numberOfPlayersAnswered == game.numberOfRounds){res.send();}
+    else{res.status(404).send();}
+});
+
+app.get("/game/current/getRoundResults/:roundNumAndPlayerName", (req, res) => {
+    let roundNum = req.params.roundNumAndPlayerName.substring(0, 1);
+    let playerName = req.params.roundNumAndPlayerName.substring(1);
+    let playerGuessAndName = game.playerGuess["round" + roundNum].find(playerGuessObj => playerGuessObj.playerName == playerName);
+    let playerGuess = playerGuessAndName.guess;
+    let correctAnswer = game.players[--roundNum].answer;
+    if(playerGuess == correctAnswer)
+    {
+        let player = checkIfPlayerExist(playerName);
+        if(!player.score){player.score = 0;}
+        player.score++;
+        res.send();
+    }
+    else{res.status(404).send(correctAnswer);}
+});
+
+app.get("/game/current/showPlayerScores", (req, res) => {
+    if(!!game.players){
+        res.send({players: game.players});
+    }
+    else{ res.status(404).send("there are no players"); }
+});
 
 app.listen(9423);
