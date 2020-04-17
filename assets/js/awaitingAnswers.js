@@ -4,7 +4,6 @@ let roundNum = new URLSearchParams(window.location.search).get("round");
 function checkIfAllPlayersAnswered(){
     fetch('http://localhost:9423/game/current/checkIfAllPlayersAnswered/' + roundNum)
     .then((resp) => {
-        console.log("all players answered status: ", resp.status);
         if(resp.status == 200){window.location.href = "roundResults.html" + window.location.search;}
     })
     .catch((error) => {console.error('Error: ', error);});   
