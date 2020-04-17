@@ -2,14 +2,14 @@ const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
 let audioPlayer = document.getElementById("player");
 
-async function setData(){
+function setData(){
     //displays the round number
     document.getElementById("roundTitle").innerHTML = "Round " + roundNum;
 
     //gets audio and sets it to the audio tag
-    await fetch('http://localhost:9423/game/current/roundAudio/' + roundNum)
+    fetch('http://localhost:9423/game/current/roundAudio/' + roundNum)
     .then((resp) => {
-        console.log("get round audio: ", resp.status);
+        if(resp.status == 404){return alert("something went wrong!");}
         resp.blob().then((audioData) => {
             audioPlayer.src = URL.createObjectURL(audioData);
         });
@@ -17,9 +17,9 @@ async function setData(){
     .catch((error) => { console.error('Error:', error); });
 
     //gets audio speed and sets it to the audio tag playrate
-    await fetch('http://localhost:9423/game/current/roundAudioSpeed/' + roundNum)
+    fetch('http://localhost:9423/game/current/roundAudioSpeed/' + roundNum)
     .then((resp) => {
-        console.log("get round audio speed: ", resp.status);
+        if(resp.status == 404){return alert("something went wrong!");}
         resp.json().then((audioSpeedObj) => {
             audioPlayer.playbackRate = audioSpeedObj.speed;
         });
@@ -30,7 +30,6 @@ async function setData(){
 function saveTheGuess(){
     guessDataObj = {
         playerName: playerName,
-        roundNum: roundNum,
         guess: document.getElementById("playerGuess").value,
     }
 

@@ -27,7 +27,7 @@ function getRoundResults(){
 function checkIfLastRound(){
     fetch('http://localhost:9423/game/current/checkIfLastRound/' + roundNum)
     .then((resp) => {
-        console.log("last round status: ", resp.status);
+        if(resp.status == 403){return alert("something went wrong!");}
         if(resp.status == 200){return lastRound = true;}
     })
     .catch((error) => {console.error('Error: ', error);});

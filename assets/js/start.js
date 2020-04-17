@@ -43,7 +43,6 @@ app.post("/game/current", (req, res) => {
         state: "initialized",
         players: [],
         numberOfRounds: 0,
-        playerGuess: {},
     };
     game.players.push(req.body);
     game.state = "preround";
@@ -79,7 +78,7 @@ app.post("/game/current/player", (req, res) => {
 });
 
 app.get("/game/current/playerExist/:playerName", (req, res) => {
-    let playerName = req.params.playerName
+    let playerName = req.params.playerName;
     if(!checkIfPlayerExist(playerName)){
         return res.status(404).send();
     }
@@ -133,7 +132,7 @@ app.post("/game/current/postAudio", (req, res) => {
 });
 
 app.get("/game/current/getAudio/:playerName", (req, res) => {
-    let playerName = req.params.playerName
+    let playerName = req.params.playerName;
     let player = checkIfPlayerExist(playerName);
     if(!player) {
         return res.status(404).send();
@@ -143,7 +142,7 @@ app.get("/game/current/getAudio/:playerName", (req, res) => {
 });
 
 app.get("/game/current/getAudioSpeed/:playerName", (req, res) => {
-    let playerName = req.params.playerName
+    let playerName = req.params.playerName;
     let player = checkIfPlayerExist(playerName);
     if(!player) {
         return res.status(404).send();
@@ -152,7 +151,7 @@ app.get("/game/current/getAudioSpeed/:playerName", (req, res) => {
 });
 
 app.post("/game/current/start", (req, res) => {
-    countNumOfRounds()
+    countNumOfRounds();
     if(game.numberOfRounds != game.players.length) {
         return res.status(404).send("all players must be ready to start the game");
     }
@@ -162,62 +161,64 @@ app.post("/game/current/start", (req, res) => {
 });
 
 app.get("/game/current/roundAudio/:roundNum", (req, res) => {
-    let playerIndex = req.params.roundNum - 1;
-    if(!game.players[playerIndex]) {
+    let roundIndex = req.params.roundNum - 1;
+    if(!game.players[roundIndex]) {
         return res.status(404).send();
     }
-    let buffer = fs.readFileSync(game.players[playerIndex].audioPath);
+    let buffer = fs.readFileSync(game.players[roundIndex].audioPath);
     res.send(buffer);
 });
 
 app.get("/game/current/roundAudioSpeed/:roundNum", (req, res) => {
-    let playerIndex = req.params.roundNum - 1;
-    if(!game.players[playerIndex]) {
+    let roundIndex = req.params.roundNum - 1;
+    if(!game.players[roundIndex]) {
         return res.status(404).send();
     }
-    res.send({speed: game.players[playerIndex].speed});
+    res.send({speed: game.players[roundIndex].speed});
 });
 
 app.post("/game/current/saveTheGuess", (req, res) => {
-    let roundNum = req.body.roundNum;
-    let guessDataObj = {
-        playerName: req.body.playerName,
-        guess: req.body.guess
-    }
+    let playerName = req.body.playerName;
+    let playerGuess = req.body.guess;
+    let player = checkIfPlayerExist(playerName);
 
-    if(!game.playerGuess["round" + roundNum]){ game.playerGuess["round" + roundNum] = []; }
-    game.playerGuess["round" + roundNum].push(guessDataObj);
+    if(!player.guess){player.guess = [];}
+    player.guess.push(playerGuess);
     res.send();
 });
 
-app.get("/game/current/checkIfLastRound/:roundNum", (req, res) => {
-    let roundNum = req.params.roundNum
-    if(roundNum == game.numberOfRounds){res.send();}
-    else if(roundNum < game.numberOfRounds && roundNum > 0){res.status(404).send();}
-    else{res.status(403);}
-});
-
 app.get("/game/current/checkIfAllPlayersAnswered/:roundNum", (req, res) => {
-    let roundNum = req.params.roundNum
-    let numberOfPlayersAnswered = game.playerGuess["round" + roundNum].length;
+    let roundIndex = req.params.roundNum - 1;
+    let numberOfPlayersAnswered = 0;
+
+    game.players.forEach(player => {
+        if(!player.guess){return;}
+        if(!!player.guess[roundIndex]){numberOfPlayersAnswered++}
+    });
     if(numberOfPlayersAnswered == game.numberOfRounds){res.send();}
     else{res.status(404).send();}
 });
 
 app.get("/game/current/getRoundResults/:roundNumAndPlayerName", (req, res) => {
-    let roundNum = req.params.roundNumAndPlayerName.substring(0, 1);
+    let roundIndex = req.params.roundNumAndPlayerName.substring(0, 1) - 1;
     let playerName = req.params.roundNumAndPlayerName.substring(1);
-    let playerGuessAndName = game.playerGuess["round" + roundNum].find(playerGuessObj => playerGuessObj.playerName == playerName);
-    let playerGuess = playerGuessAndName.guess;
-    let correctAnswer = game.players[--roundNum].answer;
+    let player = checkIfPlayerExist(playerName);
+    let playerGuess = player.guess[roundIndex];
+    let correctAnswer = game.players[roundIndex].answer;
     if(playerGuess == correctAnswer)
     {
-        let player = checkIfPlayerExist(playerName);
         if(!player.score){player.score = 0;}
         player.score++;
         res.send();
     }
     else{res.status(404).send(correctAnswer);}
+});
+
+app.get("/game/current/checkIfLastRound/:roundNum", (req, res) => {
+    let roundNum = req.params.roundNum;
+    if(roundNum == game.numberOfRounds){res.send();}
+    else if(roundNum < game.numberOfRounds && roundNum > 0){res.status(404).send();}
+    else{res.status(403);}
 });
 
 app.get("/game/current/showPlayerScores", (req, res) => {

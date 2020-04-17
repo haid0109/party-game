@@ -17,6 +17,7 @@ function showPlayerScores(playersArr){
 function getPlayerScores(){
     fetch('http://localhost:9423/game/current/showPlayerScores')
     .then((resp) => {
+        if(resp.status != 200){return alert("something went wrong!");}
         resp.json().then((playersObj) => {
             showPlayerScores(playersObj.players);
         });
