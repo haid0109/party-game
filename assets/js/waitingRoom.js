@@ -1,38 +1,29 @@
+let uploadAutioBtn = document.getElementById("uploadAudioBtn");
+let startGameBtn = document.getElementById("startGameBtn")
 const playerName = new URLSearchParams(window.location.search).get("name");
+
+function checkIfUploadedAudio(){
+    let previousPage = new URL(document.referrer);
+    if(previousPage.pathname == "/upload.html"){startGameBtn.style.display = "block";}
+}
+
 async function displayPlayersInColumn1(){
     await fetch('http://localhost:9423/game/current')
     .then((resp) => {return resp.json()})
     .then((game) => {
-        let playerCount = 1;
+        let statusColor = null
         let players = game.players;
         var elements = players.map(player => {
-            if(player.playerReady == true){
-                return `<div class="player-wrapper">
-                <img src = "" alt = "">
-                <div class="player-text">
-                    <p>player ${playerCount++}</p>
-                    <p>${player.name}</p>
-                </div>
-                <div class="ready-wrapper">
-                    <div id="ready-marker" style="background-color: green;"></div>
-                </div>                       
-            </div >`;   
-            }
-            if(!player.playerReady){
-                return `<div class="player-wrapper">
-                <img src = "" alt = "">
-                <div class="player-text">
-                    <p>player ${playerCount++}</p>
-                    <p>${player.name}</p>
-                </div>
-                <div class="ready-wrapper">
-                    <div id="ready-marker" style="background-color: red;"></div>
-                </div>                       
-            </div >`; 
-            }
+            if(player.playerReady){ statusColor = "green"}
+            else{ statusColor = "red"}
+            return `
+            <div class="playerWrapper">
+                <div class="statusMarker" style="background-color: ${statusColor};"></div>
+                <div>${player.name}</div>
+            </div >`;
             
         }).join("");
-        document.getElementById("col-1").innerHTML = elements;
+        document.getElementById("playersList").innerHTML = elements;
     })
     .catch((error) => { console.error('Error:', error); });
 }
@@ -77,6 +68,7 @@ function startGame(){
 
 window.addEventListener("load", () => {
     //runs functions once, before the setInterval starts 
+    checkIfUploadedAudio();
     displayPlayersInColumn1();
     checkGameState();
     checkIfNewGameStarted();
@@ -86,5 +78,5 @@ window.addEventListener("load", () => {
         checkIfNewGameStarted();
     }, 5000)
 });
-document.getElementById("beginBtn").addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
-document.getElementById("startGame").addEventListener("click", () => startGame());
+uploadAutioBtn.addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
+startGameBtn.addEventListener("click", () => startGame());

@@ -1,0 +1,58 @@
+html, body{
+	height: 100%;
+	margin: 0;
+    background-color: rgb(49, 69, 89);
+	color: black;
+    font-family: roboto;
+}
+
+input:focus::placeholder{
+	color: transparent;
+}
+
+#wrapper{
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#loginForm{
+	height: 17em;
+	width: 20em;
+	background-color: white;
+	box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+h1{
+	font-size: 2.5em;
+	font-family: Indie Flower;
+	margin: 0;
+}
+
+#message{	
+	font-family: Roboto;
+	margin: .5em 0;
+}
+
+#name{
+	height: 3.5em;
+	width: 18em;
+	border: 0;
+	background-color: rgb(195, 195, 195);
+	padding: 0 .5em;
+	margin: .5em 0;
+}
+
+#newGame, #joinGame{
+	height: 3.5em;
+	width: 19em;
+	border: 0;
+	background-color: rgb(49, 69, 89);
+	color: white;
+	margin: .5em 0;
+}

@@ -4,33 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="assets/css/reset.css">
-    <link rel="stylesheet" href="assets/css/core.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Indie%20Flower">
     <link rel="stylesheet" href="assets/css/waitingRoom.css">
-    <title>Document</title>
+    <title>Lobby</title>
 </head>
 <body>
-    <div id="waitingRoom">
-        <h3>Waiting for players...</h3>
-        <div class="columnwrapper"> 
-            <div class="column1" id="col-1">             
-            </div>
-            
-            <div class="column2">
-                <h2>Rules</h2>
-                <p>Up to 7 players</p>
-                <p>The players will upload a soundfile each, which will then be added to the game</p>
-                <p>The soundfile will be edited to be slower, faster, reversed etc...</p>
-                <p>Each sound will be played once in a random order</p>
-                <p>The player will then have to guess what sound/music was just played</p>
-                <p>Once every soundfile has been played the round ends, and result added to the highscore</p>
-                <p>Players will then have a choice to begin another round or end the game</p>
-            </div>
+    <div id="wrapper">
+        <div id="lobbyForm">
+            <h1>Lobby</h1>
+            <a href="">see rules</a> 
+            <div id="playersList"></div>
+            <button id="uploadAudioBtn">Upload Audio</button>
+            <button id="startGameBtn" style="display: none;">Start Game</button>
         </div>
-        <button id="beginBtn">Set up game</button>
-        <button id="startGame">Start Game</button>
     </div>
-    
     <script src="assets/js/waitingRoom.js"></script>
 </body>
 </html>

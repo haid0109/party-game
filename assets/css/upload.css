@@ -1,83 +1,88 @@
-.upload-wrapper{
-    width: 90%;
-    max-width: 500px;
-    margin: 40px auto;
-    background-color: black;
-    padding: 15px;
-    padding-top: 25px;
+html, body{
+	height: 100%;
+	margin: 0;
+    background-color: rgb(49, 69, 89);
+    color: white;
 }
 
-.upload-wrapper h1{
-    width: 100%;
-    font-size: 25px;
-    margin-bottom: 30px;
-}
-audio{
-    width: 100%;
-    margin: 0 auto;
-    margin-bottom: 20px;
+input:focus::placeholder{
+	color: transparent;
 }
 
-input{
-    width: 100%;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-    background-color: rgb(253, 240, 116);
-    padding-top: 20px;
-    padding-bottom: 20px;
+#wrapper{
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-#begin{
-    background-color: rgb(247, 0, 255);
-    box-shadow: 0 4px 4px 0 rgba(253, 253, 253, 0.603), 0 6px 20px 0 rgba(253, 253, 253, 0.603);
-    border: none;
-    border-radius: 15px;
-    margin: 0 auto;
-    font-size: 20px;
-    width: 100%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    color:white;
-    font-weight: bold;
+#uploadForm{
+    height: auto;
+	width: 20em;
+	background-color: rgb(20, 29, 37);
+	box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+    align-items: center;
+    padding: 2.5em 0;
 }
 
-#begin:hover, .flex-buttons button:hover{
-    background-color: rgb(184, 10, 190);
+h1{
+	font-size: 2.5em;
+	font-family: Indie Flower;
+	margin: 0;
 }
 
-.flex-buttons{
-    width: 100%;
+#correct{
+	height: 3.5em;
+	width: 18em;
+	border: 0;
+	background-color: rgb(195, 195, 195);
+	padding: 0 .5em;
+	margin: .5em 0 1em 0;
+}
+
+button{
+	border: 0;
+	background-color: rgb(49, 69, 89);
+	color: white;
+}
+
+#recordButtons{
+    height: 3.5em;
+    width: 15.8em;
+    display: flex;
+    justify-content: space-around;
+    margin: .5em 0;
+}
+
+#startButton, #stopButton{
+    height: 3.5em;
+    width: 7em;
+}
+
+#player{
+    width: 15.8em;
+    height: 2em;
+    margin: .5em 0 1em 0;
+}
+
+#effectButtons{
+    height: 3.5em;
+    width: 15.8em;
     display: flex;
     justify-content: space-between;
+    margin: .5em 0;
 }
 
-.flex-buttons:first-of-type{
-    margin-bottom: 27px;
+#slowDownButton, #reverseButton, #speedUpButton{
+    height: 3.5em;
+    width: 5em;
 }
 
-.flex-buttons button{
-    width: 47%;
-    padding: 15px;
-    font-size: 20px;
-    margin-bottom: 25px;
-    border-radius: 15px;
-    background-color: aquamarine;
-    border: none;
+#uploadAudioButton, #finishedButton{
+    height: 3.5em;
+    width: 19em;
+    margin: .5em 0;
 }
-
-.flex-buttons button:hover{
-    background-color: rgb(109, 219, 182);
-}
-
-#startButton{
-    background-color: palegreen;
-    color: black;
-    font-weight: bold;
-}
-#stopButton{
-    background-color: red;
-    color: black;
-    font-weight: bold;
-}
-

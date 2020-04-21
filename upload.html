@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/reset.css">
-    <link rel="stylesheet" href="assets/css/core.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Indie%20Flower">
     <link rel="stylesheet" href="assets/css/upload.css">
-    <title>Document</title>
+    <title>Upload Audio</title>
 </head>
 <body>
-    <div class="upload-wrapper">
-        <h1>Please Upload your soundbite and correct answer</h1>
-        <div class="flex-buttons">
-            <button id="startButton" disabled>start recording</button>
-            <button id="stopButton" disabled>stop recording</button>    
+    <div id="wrapper">
+        <div id="uploadForm">
+            <h1>Upload Audio</h1>
+            <input id="correct" type="text" placeholder="Correct Answer">
+            <div id="recordButtons">
+                <button id="startButton" disabled>Record</button>
+                <button id="stopButton" disabled>Stop</button>
+            </div>
+            <audio id="player" controls>Your browser does not support the audio in your browser</audio>
+            <div id="effectButtons">
+                <button id="slowDownButton" disabled>slow</button>    
+                <button id="reverseButton" disabled>reverse</button>
+                <button id="speedUpButton" disabled>fast</button>
+            </div>
+            <button id="uploadAudioButton" disabled>upload audio</button>
+            <button id="finishedButton" disabled>go to waiting room</button>
         </div>
-        <audio id="player" controls>Your browser does not support the audio in your browser</audio>
-        <input id="correct" type="text" placeholder="Correct answer (what did you upload)">
-        <h1>Add effect!</h1>
-        <div class="flex-buttons">
-            <button id="slowDownButton" type="button" disabled>Slow down audio</button>    
-            <button id="reverseButton" type="button" disabled>Reverse audio</button>
-            <button id="speedUpButton" type="button" disabled>Speed up audio</button>
-        </div>
-        <input id="uploadAudioButton" value="upload audio" disabled>
-        <input id="finishedButton" type="submit" value="go to waiting room" disabled>
     </div>
     <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
     <script src="assets/js/upload.js"></script>
