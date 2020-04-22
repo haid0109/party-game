@@ -1,51 +1,56 @@
-.game-wrapper{
-    width: 90%;
-    margin: 0 auto;
-    max-width: 500px;
-    padding: 15px;
-    padding-top: 25px;
-    border-radius: 15px;
-    display: block;
+html, body{
+	height: 100%;
+	margin: 0;
+    background-color: rgb(49, 69, 89);
+    color: white;
+    font-family: roboto;
 }
 
-.game-wrapper h2{
-    font-size: 34px;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-audio{
-    width: 100%;
-    margin: 0 auto;
-    margin-bottom: 20px;
+#wrapper{
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-input{
-    width: 100%;
-    margin: 0 auto;
-    margin-bottom: 40px;
-    box-sizing: border-box;
-    background-color: rgb(253, 240, 116);
-    padding-top: 20px;
-    padding-bottom: 20px;
+#guessForm{
+    height: auto;
+	width: 20em;
+	background-color: rgb(20, 29, 37);
+	box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+    align-items: center;
+    padding: 2.5em 0;
 }
 
-#makeAGuess{
-    background-color: rgb(247, 0, 255);
-    box-shadow: 0 4px 4px 0 rgba(253, 253, 253, 0.603), 0 6px 20px 0 rgba(253, 253, 253, 0.603);
-    border: none;
-    border-radius: 15px;
-    margin: 0 auto;
-    font-size: 20px;
-    width: 100%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    color:white;
-    font-weight: bold;
+h1{
+	font-size: 2.5em;
+	font-family: Indie Flower;
+	margin: 0;
 }
 
-#makeAGuess:hover, .flex-buttons button:hover{
-    background-color: rgb(184, 10, 190);
+#player{
+    width: 15.8em;
+    height: 2em;
+    margin: .5em 0;
 }
 
+#guess{
+	height: 3em;
+	width: 18em;
+	border: 0;
+	background-color: rgb(195, 195, 195);
+	padding: 0 .5em;
+	margin: .5em 0;
+}
 
+#answer{
+	height: 3em;
+	width: 19em;
+	border: 0;
+    background-color: rgb(49, 69, 89);
+    color: white;
+	margin: .5em 0;
+}

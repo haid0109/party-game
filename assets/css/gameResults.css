@@ -1,99 +1,55 @@
-#answer-wrapper{
-    width: 100%;
-    margin: 0 auto;
+html, body{
+	height: 100%;
+	margin: 0;
+    background-color: rgb(49, 69, 89);
+    color: white;
+    font-family: roboto;
+}
+
+#wrapper{
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#resultForm{
+    height: auto;
+	width: 20em;
+	background-color: rgb(20, 29, 37);
+	box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+    align-items: center;
+    padding: 2.5em 0;
+}
+
+h1{
+	font-size: 2.5em;
+	font-family: Indie Flower;
+	margin: 0;
+}
+
+p{margin: 0; ;}
+
+.playerWrapper{
+    width: 15em;
+    border-style: solid;
+    border-width: .3em;
+    border-color: rgb(49, 69, 89);
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    max-width: 500px;
+    margin: .5em 0;
+    padding: .2em .5em;
 }
 
-h3{
-    font-size: 30px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 40px;
-    margin-bottom: 20px;
-}
-
-.column1{
-    width: 100%;
-}
-
-.ready-wrapper{
-    width: 10%;
-}
-
-#ready-marker{
-    border-radius: 15px;
-    border: 1px solid white;
-    width: 10px;
-    margin: 25px auto;
-    min-height: 10px;
-}
-
-.player-wrapper{
-    background-color: black;
-    margin: 15px auto;
-    width: 85%;
-    border-radius: 15px;
-    border: 1px solid white; 
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-.player-wrapper .player-text p{
-    width: 100%;
-    font-size: 20px;
-    text-align: left;
-}
-
-.player-wrapper .player-text p:first-of-type{
-    text-decoration: underline;
-    font-weight: bold;
-}
-
-.player-text{
-    display:block;
-    width: 25%;
-}
-
-.player-wrapper img{
-    width: 25%;
-    border: 1px solid white;
-    height: 100px;
-}
-
-.theirGuess{
-    width: 30%;
-}
-
-.theirGuess p{
-    text-align: left;
-}
-
-.player-wrapper .theirGuess p:first-of-type{
-    text-decoration: underline;
-    font-weight: bold;
-}
-
-button{
-    display: inline-block;
-    background-color: rgb(247, 0, 255);
-    box-shadow: 0 4px 4px 0 rgba(253, 253, 253, 0.603), 0 6px 20px 0 rgba(253, 253, 253, 0.603);
-    border: none;
-    border-radius: 15px;
-    margin-top: 30px;
-    font-size: 20px;
-    width: 90%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    color:white;
-    font-weight: bold;
-}
-
-button:hover{
-    background-color: rgb(184, 10, 190);
+#backToStart{
+	height: 3em;
+	width: 18.5em;
+	border: 0;
+    background-color: rgb(49, 69, 89);
+    color: white;
+	margin: .5em 0;
 }

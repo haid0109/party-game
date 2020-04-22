@@ -30,7 +30,7 @@ function setData(){
 function saveTheGuess(){
     guessDataObj = {
         playerName: playerName,
-        guess: document.getElementById("playerGuess").value,
+        guess: document.getElementById("guess").value,
     }
 
     fetch('http://localhost:9423/game/current/saveTheGuess', {
@@ -57,7 +57,7 @@ window.addEventListener("load", () => {
     setInterval(checkIfNewGameStarted, 5000);
 });
 
-document.getElementById("makeAGuess").addEventListener("click", function(){
+document.getElementById("answer").addEventListener("click", function(){
     saveTheGuess();
     window.location.href = "awaitingAnswers.html" + window.location.search;
 });

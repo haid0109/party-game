@@ -62,6 +62,10 @@ button{
     width: 7em;
 }
 
+#startButton{ background-color: green;}
+
+#stopButton{ background-color: red;}
+
 #player{
     width: 15.8em;
     height: 2em;
@@ -69,7 +73,6 @@ button{
 }
 
 #effectButtons{
-    height: 3.5em;
     width: 15.8em;
     display: flex;
     justify-content: space-between;
@@ -81,7 +84,7 @@ button{
     width: 5em;
 }
 
-#uploadAudioButton, #finishedButton{
+#addEffectButton, #uploadAudioButton, #finishedButton{
     height: 3.5em;
     width: 19em;
     margin: .5em 0;

@@ -3,9 +3,11 @@ let stopBtn = document.getElementById("stopButton");
 let speedUpBtn = document.getElementById("speedUpButton")
 let reverseBtn = document.getElementById("reverseButton")
 let slowDownBtn = document.getElementById("slowDownButton")
+let addEffectBtn = document.getElementById("addEffectButton")
 let uploadAudioBtn = document.getElementById("uploadAudioButton");
-let audioPlayer = document.getElementById("player");
 let finishedBtn = document.getElementById("finishedButton");
+let audioPlayer = document.getElementById("player");
+let effectButtons = document.getElementById("effectButtons")
 
 const playerName = new URLSearchParams(window.location.search).get("name");
 let correctAnswer = null;
@@ -50,7 +52,10 @@ function startRecording() {
     }
 
     startBtn.disabled = true;
+    startBtn.style.backgroundColor  = "red";
     stopBtn.disabled = false;
+    stopBtn.style.backgroundColor  = "green";
+
     let options = {
         audio: true,
         video: false
@@ -66,7 +71,9 @@ function startRecording() {
     })
     .catch(function(err) {
         startBtn.disabled = false;
+        startBtn.style.backgroundColor  = "green";
         stopBtn.disabled = true;
+        stopBtn.style.backgroundColor  = "red";
         alert("error: " + err);
     });
 }
@@ -77,31 +84,56 @@ function stopRecording() {
         alert("you need to write a correct answer for your audio");
         return;
     }
-    
-    stopBtn.disabled = true;
     startBtn.disabled = false;
+    startBtn.style.backgroundColor  = "green";
+    stopBtn.disabled = true;
+    stopBtn.style.backgroundColor  = "red";
     recordJsObj.stop(); 
     getUserMediaStream.getAudioTracks()[0].stop();
+    recordJsObj.exportWAV((audioBlob) => {
+        audioPlayer.src = URL.createObjectURL(audioBlob);
+    })
 
-    speedUpBtn.disabled = false;
-    reverseBtn.disabled = false;
-    slowDownBtn.disabled = false;
-    uploadAudioBtn.disabled = false;
+    addEffectBtn.style.display = "block";
+    uploadAudioBtn.style.display = "block";
 }
 
 function slowDownAudio(){
-    if(audioSpeed == 0.5){ audioSpeed = 1; }
-    else { audioSpeed = 0.5; }
+    finishedBtn.style.display = "none";
+    if(audioSpeed == 0.5){ 
+        audioSpeed = 1;
+        slowDownBtn.style.backgroundColor = "rgb(49, 69, 89)";
+    }
+    else { 
+        audioSpeed = 0.5;
+        speedUpBtn.style.backgroundColor = "rgb(49, 69, 89)";
+        slowDownBtn.style.backgroundColor = "green";
+    }
 }
 
 function speedUpAudio(){
-    if(audioSpeed == 2.5){ audioSpeed = 1; }
-    else { audioSpeed = 2.5; }
+    finishedBtn.style.display = "none";
+    if(audioSpeed == 2.5){ 
+        audioSpeed = 1;
+        speedUpBtn.style.backgroundColor = "rgb(49, 69, 89)";
+    }
+    else { 
+        audioSpeed = 2.5;
+        slowDownBtn.style.backgroundColor = "rgb(49, 69, 89)";
+        speedUpBtn.style.backgroundColor = "green";
+    }
 }
 
 function reverseAudio(){
-    if(audioReverse == true){ audioReverse = false; }
-    else { audioReverse = true; }
+    finishedBtn.style.display = "none";
+    if(audioReverse == true){ 
+        audioReverse = false;
+        reverseBtn.style.backgroundColor = "rgb(49, 69, 89)";
+    }
+    else { 
+        audioReverse = true;
+        reverseBtn.style.backgroundColor = "green";
+    }
 }
 
 async function handleDataUpload(audioBlob){ 
@@ -168,9 +200,16 @@ stopBtn.addEventListener("click", stopRecording);
 speedUpBtn.addEventListener("click", speedUpAudio);
 reverseBtn.addEventListener("click", reverseAudio);
 slowDownBtn.addEventListener("click", slowDownAudio);
+addEffectBtn.addEventListener("click", () => {
+    addEffectBtn.style.display = "none";
+    slowDownBtn.style.display = "block";
+    reverseBtn.style.display = "block";
+    speedUpBtn.style.display = "block";
+
+})
 uploadAudioBtn.addEventListener("click", () => {
     recordJsObj.exportWAV(handleDataUpload);
-    finishedBtn.disabled = false;
+    finishedBtn.style.display = "block";
 });
 finishedBtn.addEventListener("click", () => {
     window.location.href = "waitingRoom.html" + window.location.search;

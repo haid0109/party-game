@@ -4,11 +4,10 @@ const playerName = new URLSearchParams(window.location.search).get("name");
 function showPlayerScores(playersArr){
     let elements = playersArr.map(player => {
         if(!player.score){player.score = 0;}
-        return `<div class="player-wrapper">
-        <div class="player-text">
+        return `
+        <div class="playerWrapper">
             <p>${player.name}</p>
-            <p>score: ${player.score}</p>
-        </div>                     
+            <p>score: ${player.score}</p>                    
         </div >`;   
     }).join("");
     scoreboard.innerHTML = elements;
@@ -25,5 +24,8 @@ function getPlayerScores(){
     .catch((error) => {console.error('Error: ', error);});
 }
 
-window.addEventListener("load", getPlayerScores);
+window.addEventListener("load", () => {
+    getPlayerScores();
+    setInterval(getPlayerScores, 5000);
+});
 document.getElementById("backToStart").addEventListener("click", () => {window.location.href =  "index.html";});
