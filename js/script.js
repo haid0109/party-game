@@ -28,13 +28,24 @@ async function checkGameStatus(){
     }
 }
 
-function addNewPlayer(){
-    if(!document.getElementById("name").value)
+async function addNewPlayer(){
+    let playerName = document.getElementById("name").value;
+    let playerExist = null;
+
+    await fetch('http://localhost:9423/game/current/playerExist/' + playerName)
+    .then((resp) => {
+        if(resp.status == 200){playerExist = true;}
+        else{playerExist = false;}
+    })
+    .catch((error) => { console.error('Error:', error); });
+
+    if(!playerName || playerExist)
     {
-        alert("you need to enter a name to play the game")
+        alert("you can't use that name");
         return;
     }
-    const player = {name: document.getElementById("name").value};
+    
+    const player = {name: playerName};
     fetch('http://localhost:9423/game/current/player', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,7 +56,13 @@ function addNewPlayer(){
 }
 
 function createNewGame(){
-    const player = {name: document.getElementById("name").value};
+    let playerName = document.getElementById("name").value;
+    if(!playerName)
+    {
+        alert("you can't use that name");
+        return;
+    }
+    const player = {name: playerName};
     fetch('http://localhost:9423/game/current', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

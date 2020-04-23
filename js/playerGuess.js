@@ -28,9 +28,16 @@ async function setData(){
 }
 
 function saveTheGuess(){
+    let guess = document.getElementById("guess").value;
+    if(!guess)
+    {
+        alert("you need to write a guess");
+        return;
+    }
+
     guessDataObj = {
         playerName: playerName,
-        guess: document.getElementById("guess").value,
+        guess: guess,
     }
 
     fetch('http://localhost:9423/game/current/saveTheGuess', {
@@ -39,6 +46,7 @@ function saveTheGuess(){
         body: JSON.stringify(guessDataObj)
     })
     .catch((error) => { console.error('Error:', error); });
+    window.location.href = "awaitingAnswers.html" + window.location.search;
 }
 
 function checkIfNewGameStarted(){
@@ -56,8 +64,4 @@ window.addEventListener("load", () => {
     checkIfNewGameStarted();
     setInterval(checkIfNewGameStarted, 5000);
 });
-
-document.getElementById("answer").addEventListener("click", function(){
-    saveTheGuess();
-    window.location.href = "awaitingAnswers.html" + window.location.search;
-});
+document.getElementById("answer").addEventListener("click", saveTheGuess);
