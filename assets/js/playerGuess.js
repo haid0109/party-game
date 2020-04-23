@@ -2,12 +2,12 @@ const playerName = new URLSearchParams(window.location.search).get("name");
 let roundNum = new URLSearchParams(window.location.search).get("round");
 let audioPlayer = document.getElementById("player");
 
-function setData(){
+async function setData(){
     //displays the round number
     document.getElementById("roundTitle").innerHTML = "Round " + roundNum;
 
     //gets audio and sets it to the audio tag
-    fetch('http://localhost:9423/game/current/roundAudio/' + roundNum)
+    await fetch('http://localhost:9423/game/current/roundAudio/' + roundNum)
     .then((resp) => {
         if(resp.status == 404){return alert("something went wrong!");}
         resp.blob().then((audioData) => {

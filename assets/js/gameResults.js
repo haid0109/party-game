@@ -26,6 +26,6 @@ function getPlayerScores(){
 
 window.addEventListener("load", () => {
     getPlayerScores();
-    setInterval(getPlayerScores, 5000);
+    setInterval(getPlayerScores, 1000);
 });
 document.getElementById("backToStart").addEventListener("click", () => {window.location.href =  "index.html";});
