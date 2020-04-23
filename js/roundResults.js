@@ -11,13 +11,13 @@ function getRoundResults(){
     .then((resp) => {
         if(resp.status == 200){
             verdict.innerHTML = "your answer was correct!";
-            verdictImg.src = "assets/img/correct.png";
+            verdictImg.src = "../img/correct.png";
         }
         else{
             verdict.innerHTML = "your answer was wrong!";
             resp.text().then((correctAnswer) => {
                 rightAnswer.innerHTML = "right answer: " + correctAnswer;
-                verdictImg.src = "assets/img/wrong.png";
+                verdictImg.src = "../img/wrong.png";
             });
         }
     })
