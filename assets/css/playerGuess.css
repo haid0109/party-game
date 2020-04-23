@@ -54,3 +54,8 @@ h1{
     color: white;
 	margin: .5em 0;
 }
+
+button:hover{
+	filter: grayscale(70%);
+	cursor: pointer;
+}

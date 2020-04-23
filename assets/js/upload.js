@@ -52,9 +52,9 @@ function startRecording() {
     }
 
     startBtn.disabled = true;
-    startBtn.style.backgroundColor  = "red";
+    startBtn.style.backgroundColor  = "rgb(30, 43, 55)";
     stopBtn.disabled = false;
-    stopBtn.style.backgroundColor  = "green";
+    stopBtn.style.backgroundColor  = "rgb(49, 69, 89)";
 
     let options = {
         audio: true,
@@ -71,9 +71,9 @@ function startRecording() {
     })
     .catch(function(err) {
         startBtn.disabled = false;
-        startBtn.style.backgroundColor  = "green";
+        startBtn.style.backgroundColor  = "rgb(49, 69, 89)";
         stopBtn.disabled = true;
-        stopBtn.style.backgroundColor  = "red";
+        stopBtn.style.backgroundColor  = "rgb(30, 43, 55)";
         alert("error: " + err);
     });
 }
@@ -85,9 +85,9 @@ function stopRecording() {
         return;
     }
     startBtn.disabled = false;
-    startBtn.style.backgroundColor  = "green";
+    startBtn.style.backgroundColor  = "rgb(49, 69, 89)";
     stopBtn.disabled = true;
-    stopBtn.style.backgroundColor  = "red";
+    stopBtn.style.backgroundColor  = "rgb(30, 43, 55)";
     recordJsObj.stop(); 
     getUserMediaStream.getAudioTracks()[0].stop();
     recordJsObj.exportWAV((audioBlob) => {
@@ -107,7 +107,7 @@ function slowDownAudio(){
     else { 
         audioSpeed = 0.5;
         speedUpBtn.style.backgroundColor = "rgb(49, 69, 89)";
-        slowDownBtn.style.backgroundColor = "green";
+        slowDownBtn.style.backgroundColor = "rgb(30, 43, 55)";
     }
 }
 
@@ -120,7 +120,7 @@ function speedUpAudio(){
     else { 
         audioSpeed = 2.5;
         slowDownBtn.style.backgroundColor = "rgb(49, 69, 89)";
-        speedUpBtn.style.backgroundColor = "green";
+        speedUpBtn.style.backgroundColor = "rgb(30, 43, 55)";
     }
 }
 
@@ -132,7 +132,7 @@ function reverseAudio(){
     }
     else { 
         audioReverse = true;
-        reverseBtn.style.backgroundColor = "green";
+        reverseBtn.style.backgroundColor = "rgb(30, 43, 55)";
     }
 }
 

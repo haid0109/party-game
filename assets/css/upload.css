@@ -62,10 +62,6 @@ button{
     width: 7em;
 }
 
-#startButton{ background-color: green;}
-
-#stopButton{ background-color: red;}
-
 #player{
     width: 15.8em;
     height: 2em;
@@ -88,4 +84,13 @@ button{
     height: 3.5em;
     width: 19em;
     margin: .5em 0;
+}
+
+#finishedButton{
+	background-color: green;
+}
+
+button:hover{
+	filter: grayscale(70%);
+	cursor: pointer;
 }
