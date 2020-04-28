@@ -7,7 +7,7 @@ let lastRound = null;
 let newUrlParam = null;
 
 function getRoundResults(){
-    fetch('http://localhost:9423/game/current/getRoundResults/' + roundNum + playerName)
+    fetch(`http://localhost:9423/game/current/getRoundResults/${roundNum}/${playerName}`)
     .then((resp) => {
         if(resp.status == 200){
             verdict.innerHTML = "your answer was correct!";
