@@ -42,7 +42,7 @@ function joinExistingGame(){
     const player = {name: playerName};
 
     fetch(`http://localhost:9423/game/join/${gameCode}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(player)
     })

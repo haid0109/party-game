@@ -212,7 +212,7 @@ uploadAudioBtn.addEventListener("click", async () => {
 finishedBtn.addEventListener("click", () => {
     fetch(`http://localhost:9423/game/player/ready/${gameCode}/`,
     {
-        method:"PATCH",
+        method:"PUT",
     })
     .then((response) => {
         if(response.status == 404){return alert("all players must be ready to start the game");}

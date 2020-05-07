@@ -55,10 +55,10 @@ function checkIfGameStarted(){
 function startGame(){
     fetch(`http://localhost:9423/game/start/${gameCode}`,
     {
-        method:"PATCH",
+        method:"PUT",
     })
-    .then((response) => {
-        if(response.status == 404){return alert("all players must be ready to start the game");}
+    .then((resp) => {
+        if(resp.status == 404){return alert("all players must be ready to start the game");}
         window.location.href = "playerGuess.html" + window.location.search + "&round=1";
     })
     .catch((error) => { console.error('Error:', error); });  
