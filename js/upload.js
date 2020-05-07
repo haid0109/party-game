@@ -1,3 +1,5 @@
+const secretKey = new URLSearchParams(window.location.search).get("secretKey");
+const gameCode = new URLSearchParams(window.location.search).get("code");
 let startBtn = document.getElementById("startButton");
 let stopBtn = document.getElementById("stopButton");
 let speedUpBtn = document.getElementById("speedUpButton")
@@ -9,13 +11,21 @@ let finishedBtn = document.getElementById("finishedButton");
 let audioPlayer = document.getElementById("player");
 let effectButtons = document.getElementById("effectButtons")
 
-const playerName = new URLSearchParams(window.location.search).get("name");
 let correctAnswer = null;
 let audioSpeed = 1;
 let audioReverse = false;
 
 let getUserMediaStream;
 let recordJsObj;
+
+async function checkIfPlayerAndGameExist(){
+    await fetch(`http://localhost:9423/game/player/exist/${gameCode}/${secretKey}`)
+    .then((resp) => {
+        if(resp.status == 404){window.location.href = "index.html" + "?kicked=gameNull";}
+        if(resp.status == 403){window.location.href = "index.html" + "?kicked=playerNull";}
+    })
+    .catch((error) => {console.error('Error: ', error);});
+}
 
 function checkCompatibility(){
     if (!!navigator.mediaDevices.getUserMedia) {
@@ -94,7 +104,7 @@ function stopRecording() {
         audioPlayer.src = URL.createObjectURL(audioBlob);
     })
 
-    addEffectBtn.style.display = "block";
+    if(slowDownBtn.style.display == "none"){addEffectBtn.style.display = "block";}
     uploadAudioBtn.style.display = "block";
 }
 
@@ -137,22 +147,21 @@ function reverseAudio(){
 }
 
 async function handleDataUpload(audioBlob){ 
-    //creates an object which contains the player name and correct answer, and converts it to JSON 
-    let playerData = {
-        name: playerName,
+    //creates an object which contains the meta data of the audio, and converts it to JSON 
+    let audioMetaData = {
         answer: correctAnswer,
         speed: audioSpeed,
         reverse: audioReverse,
     };
-    let stringifiedPlayerData = JSON.stringify(playerData);
+    let stringifiedAudioMetaData = JSON.stringify(audioMetaData);
 
     //creates a formdata instance and populates it with the audio blob
     let audioFormData = new FormData();
     audioFormData.append("audio", audioBlob, "audio.wav");
-    audioFormData.append("playerData", stringifiedPlayerData);
+    audioFormData.append("audioMetaData", stringifiedAudioMetaData);
 
     //posts the audio blob as formdata to the server
-    await fetch('http://localhost:9423/game/current/postAudio', {
+    await fetch(`http://localhost:9423/game/player/audio/${gameCode}/${secretKey}`, {
         method: 'POST',
         body: audioFormData
     })
@@ -160,7 +169,7 @@ async function handleDataUpload(audioBlob){
     .catch((error) => { console.error('Error:', error); });
 
     //gets the audio blob from the server and populates an audio tag in the frontend with it
-    await fetch('http://localhost:9423/game/current/getAudio/' + playerName)
+    await fetch(`http://localhost:9423/game/player/audio/data/${gameCode}/${secretKey}`)
     .then((resp) => {
         console.log("get audio: ", resp.status);
         resp.blob().then((audioData) => {
@@ -170,30 +179,19 @@ async function handleDataUpload(audioBlob){
     .catch((error) => {console.error('Error: ', error);});
 
     //gets the audio speed from the server and sets the playbackRate on the audio tag
-    fetch('http://localhost:9423/game/current/getAudioSpeed/' + playerName)
+    fetch(`http://localhost:9423/game/player/audio/metaData/${gameCode}/${secretKey}`)
     .then((resp) => {
         console.log("get audio speed: ", resp.status);
-        resp.json().then((audioSpeedObj) => {
-            audioPlayer.playbackRate = audioSpeedObj.speed;
+        resp.json().then((audioMetaData) => {
+            audioPlayer.playbackRate = audioMetaData.speed;
         });
     })
     .catch((error) => {console.error('Error: ', error);});
 }
 
-function checkIfNewGameStarted(){
-    fetch('http://localhost:9423/game/current/playerExist/' + playerName)
-    .then((resp) => {
-        if(resp.status == 404){
-            window.location.href = "index.html" + "?newGame=true";
-        }
-    })
-    .catch((error) => {console.error('Error: ', error);});
-}
-
-window.addEventListener("load", checkCompatibility);
-window.addEventListener("load", () => {
-    checkIfNewGameStarted();
-    setInterval(checkIfNewGameStarted, 5000)
+window.addEventListener("load", async () => {
+    await checkIfPlayerAndGameExist();
+    checkCompatibility();
 });
 startBtn.addEventListener("click", startRecording);
 stopBtn.addEventListener("click", stopRecording);
@@ -207,10 +205,19 @@ addEffectBtn.addEventListener("click", () => {
     speedUpBtn.style.display = "block";
 
 })
-uploadAudioBtn.addEventListener("click", () => {
-    recordJsObj.exportWAV(handleDataUpload);
+uploadAudioBtn.addEventListener("click", async () => {
+    await recordJsObj.exportWAV(handleDataUpload);
     finishedBtn.style.display = "block";
 });
 finishedBtn.addEventListener("click", () => {
+    fetch(`http://localhost:9423/game/player/ready/${gameCode}/`,
+    {
+        method:"PATCH",
+    })
+    .then((response) => {
+        if(response.status == 404){return alert("all players must be ready to start the game");}
+        window.location.href = "playerGuess.html" + window.location.search + "&round=1";
+    })
+    .catch((error) => { console.error('Error:', error); });
     window.location.href = "waitingRoom.html" + window.location.search;
 });

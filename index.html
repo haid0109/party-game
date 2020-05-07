@@ -13,10 +13,15 @@
     <div id="wrapper">
         <div id="loginForm">
             <h1>Party Game</h1>
-            <p id="message"></p>
-            <input id="name" type="text" placeholder="Insert Username">
-            <button id="newGame" style="display: none;">Create new game</button>
-            <button id="joinGame" style="display: none;">Join game</button>
+
+            <button id="newGameChoiceBtn">Create new game</button>
+            <button id="joinGameChoiceBtn">Join existing game</button>
+
+            <input id="gameCode" type="text" placeholder="Insert game code" style="display: none;">
+            <input id="playerName" type="text" placeholder="Insert Username" style="display: none;">
+            <button id="startNewGameBtn" style="display: none;">Create</button>
+            <button id="joinExistingGameBtn" style="display: none;">Join</button>
+            <button id="goBackBtn" style="display: none;">go back</button>
         </div>
     </div>
     <script src="js/script.js"></script>

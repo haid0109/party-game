@@ -1,18 +1,30 @@
-let uploadAutioBtn = document.getElementById("uploadAudioBtn");
+const secretKey = new URLSearchParams(window.location.search).get("secretKey");
+const gameCode = new URLSearchParams(window.location.search).get("code");
+let uploadAudioBtn = document.getElementById("uploadAudioBtn");
 let startGameBtn = document.getElementById("startGameBtn")
-const playerName = new URLSearchParams(window.location.search).get("name");
 
-function checkIfUploadedAudio(){
-    let previousPage = new URL(document.referrer);
-    if(previousPage.pathname == "/upload.html"){startGameBtn.style.display = "block";}
+async function checkIfPlayerAndGameExist(){
+    await fetch(`http://localhost:9423/game/player/exist/${gameCode}/${secretKey}`)
+    .then((resp) => {
+        if(resp.status == 404){window.location.href = "index.html" + "?kicked=gameNull";}
+        if(resp.status == 403){window.location.href = "index.html" + "?kicked=playerNull";}
+    })
+    .catch((error) => {console.error('Error: ', error);});
 }
 
-async function displayPlayersInColumn1(){
-    await fetch('http://localhost:9423/game/current')
+function checkIfAudioWasUploaded(){
+    try{
+        let previousPage = new URL(document.referrer);
+        if(previousPage.pathname == "/upload.html"){startGameBtn.style.display = "block";}
+    }catch(error){}
+}
+
+function displayPlayers(){
+    fetch(`http://localhost:9423/game/players/${gameCode}`)
     .then((resp) => {return resp.json()})
-    .then((game) => {
+    .then((playersObj) => {
         let statusColor = null
-        let players = game.players;
+        let players = playersObj.playersArray;
         var elements = players.map(player => {
             if(player.playerReady){ statusColor = "green"}
             else{ statusColor = "red"}
@@ -28,11 +40,11 @@ async function displayPlayersInColumn1(){
     .catch((error) => { console.error('Error:', error); });
 }
 
-async function checkGameState(){
-    await fetch('http://localhost:9423/game/current/state')
+function checkIfGameStarted(){
+    fetch(`http://localhost:9423/game/state/${gameCode}`)
     .then((resp) => {
-        resp.json().then((gameState) => {
-            if(gameState.state == "in progress"){
+        resp.json().then((gameStateObj) => {
+            if(gameStateObj.state == "in progress"){
                 window.location.href = "playerGuess.html" + window.location.search + "&round=1";
             }
         });
@@ -40,43 +52,28 @@ async function checkGameState(){
     .catch((error) => {console.error('Error: ', error);});
 }
 
-function checkIfNewGameStarted(){
-    fetch('http://localhost:9423/game/current/playerExist/' + playerName)
-    .then((resp) => {
-        if(resp.status == 404){
-            window.location.href = "index.html" + "?newGame=true";
-        }
-    })
-    .catch((error) => {console.error('Error: ', error);});
-}
-
 function startGame(){
-    fetch('http://localhost:9423/game/current/start',
+    fetch(`http://localhost:9423/game/start/${gameCode}`,
     {
-        method:"POST",
+        method:"PATCH",
     })
     .then((response) => {
-        if(response.status == 404)
-        {
-            alert("all players must be ready to start the game");
-            return;
-        }
+        if(response.status == 404){return alert("all players must be ready to start the game");}
         window.location.href = "playerGuess.html" + window.location.search + "&round=1";
     })
     .catch((error) => { console.error('Error:', error); });  
 }
 
-window.addEventListener("load", () => {
-    //runs functions once, before the setInterval starts 
-    checkIfUploadedAudio();
-    displayPlayersInColumn1();
-    checkGameState();
-    checkIfNewGameStarted();
+window.addEventListener("load", async () => {
+    //runs functions once, before the setInterval starts
+    await checkIfPlayerAndGameExist();
+    checkIfAudioWasUploaded();
+    displayPlayers();
+    checkIfGameStarted();
     setInterval(() => {
-        displayPlayersInColumn1();
-        checkGameState();
-        checkIfNewGameStarted();
-    }, 5000)
+        displayPlayers();
+        checkIfGameStarted();
+    }, 5000);
 });
-uploadAutioBtn.addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
+uploadAudioBtn.addEventListener("click", () => window.location.href = "upload.html" + window.location.search);
 startGameBtn.addEventListener("click", () => startGame());

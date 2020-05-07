@@ -1,81 +1,89 @@
+let newGameChoiceBtn = document.getElementById("newGameChoiceBtn");
+let joinGameChoiceBtn = document.getElementById("joinGameChoiceBtn");
+let startNewGameBtn = document.getElementById("startNewGameBtn");
+let joinExistingGameBtn = document.getElementById("joinExistingGameBtn");
+let goBackBtn = document.getElementById("goBackBtn");
+
 function playerKicked(){
-    let newGame = new URLSearchParams(window.location.search).get("newGame");
-    if(newGame){ 
-        alert("A new game was started, and you were therefore kicked");
+    const kicked = new URLSearchParams(window.location.search).get("kicked");
+    if(kicked == "gameNull"){ 
+        alert("the game you were in does not exist");
+        window.location.href = "index.html"
+    }
+    else if(kicked == "playerNull"){ 
+        alert("your player does not exist in that game");
         window.location.href = "index.html"
     }
 }
 
-async function checkGameStatus(){
-    let status;
-    await fetch('http://localhost:9423/game/current')
-    .then((resp) => status = resp.status)
-    .catch((error) => { console.error('Error:', error); });
-    if(status == 200){
-        document.getElementById("newGame").style.display = "none";
-        document.getElementById("joinGame").style.display = "block";
-        document.getElementById("message").innerHTML = "Game is in preround. Join game?";
-    }
-    else if(status == 403){
-        document.getElementById("joinGame").style.display = "none";
-        document.getElementById("newGame").style.display = "block";
-        document.getElementById("message").innerHTML = "Can't join the game. Start new game?";
-    }
-    else{
-        document.getElementById("joinGame").style.display = "none";
-        document.getElementById("newGame").style.display = "block";
-        document.getElementById("message").innerHTML = "There is no game. Start new game?";
-    }
-}
-
-async function addNewPlayer(){
-    let playerName = document.getElementById("name").value;
-    let playerExist = null;
-
-    await fetch('http://localhost:9423/game/current/playerExist/' + playerName)
-    .then((resp) => {
-        if(resp.status == 200){playerExist = true;}
-        else{playerExist = false;}
-    })
-    .catch((error) => { console.error('Error:', error); });
-
-    if(!playerName || playerExist)
-    {
-        alert("you can't use that name");
-        return;
-    }
+function startNewGame(){
+    let playerName = document.getElementById("playerName").value;
+    if(!playerName){return alert("you can't use that name");}
     
     const player = {name: playerName};
-    fetch('http://localhost:9423/game/current/player', {
+    fetch(`http://localhost:9423/game/new`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(player)
     })
+    .then((resp) => {
+        if(resp.status != 200){return alert("something went wrong, try again.")}
+        resp.json().then((secretAndCodeObj) => {
+            window.location.href = "waitingRoom.html" + "?secretKey=" + secretAndCodeObj.secretKey + "&code=" + secretAndCodeObj.code;
+        });
+    })
     .catch((error) => { console.error('Error:', error); });
-    window.location.href = "waitingRoom.html" + "?name=" + player.name;
 }
 
-function createNewGame(){
-    let playerName = document.getElementById("name").value;
-    if(!playerName)
-    {
-        alert("you can't use that name");
-        return;
-    }
+function joinExistingGame(){
+    let gameCode = document.getElementById("gameCode").value;
+    let playerName = document.getElementById("playerName").value;
+    if(!playerName){return alert("your username cannot be empty");}
     const player = {name: playerName};
-    fetch('http://localhost:9423/game/current', {
-        method: 'POST',
+
+    fetch(`http://localhost:9423/game/join/${gameCode}`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(player)
     })
+    .then((resp) => {
+        if(resp.status == 404){return alert("there is no game with the entered game code");}
+        if(resp.status == 403){return alert("your username is taken");}
+        if(resp.status == 400){return alert("the game you are trying to join has already started");}
+        resp.json().then((secretKeyObj) => {
+            window.location.href = "waitingRoom.html" + "?secretKey=" + secretKeyObj.secretKey + "&code=" + gameCode;
+        });
+    })
     .catch((error) => { console.error('Error:', error); });
-    window.location.href = "waitingRoom.html" + "?name=" + player.name;
 }
 
-window.addEventListener("load", () => {
-    playerKicked();
-    checkGameStatus();
-    setInterval(checkGameStatus, 5000)   
+window.addEventListener("load", playerKicked);
+startNewGameBtn.addEventListener("click", startNewGame);
+joinExistingGameBtn.addEventListener("click", joinExistingGame);
+newGameChoiceBtn.addEventListener("click", () => {
+    newGameChoiceBtn.style.display = "none";
+    joinGameChoiceBtn.style.display = "none";
+
+    document.getElementById("playerName").style.display = "block";
+    startNewGameBtn.style.display = "block";
+    goBackBtn.style.display = "block";
 });
-document.getElementById("joinGame").addEventListener("click", addNewPlayer);
-document.getElementById("newGame").addEventListener("click", createNewGame);
+joinGameChoiceBtn.addEventListener("click", () => {
+    newGameChoiceBtn.style.display = "none";
+    joinGameChoiceBtn.style.display = "none";
+
+    document.getElementById("gameCode").style.display = "block";
+    document.getElementById("playerName").style.display = "block";
+    joinExistingGameBtn.style.display = "block";
+    goBackBtn.style.display = "block";
+});
+goBackBtn.addEventListener("click", () => {
+    document.getElementById("gameCode").style.display = "none";
+    document.getElementById("playerName").style.display = "none";
+    startNewGameBtn.style.display = "none";
+    joinExistingGameBtn.style.display = "none";
+    goBackBtn.style.display = "none";
+
+    newGameChoiceBtn.style.display = "block";
+    joinGameChoiceBtn.style.display = "block";
+});

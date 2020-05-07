@@ -6,10 +6,6 @@ html, body{
     font-family: roboto;
 }
 
-input:focus::placeholder{
-	color: transparent;
-}
-
 #wrapper{
 	height: 100%;
 	display: flex;
@@ -18,7 +14,7 @@ input:focus::placeholder{
 }
 
 #loginForm{
-	height: 17em;
+	height: 20em;
 	width: 20em;
 	background-color: white;
 	box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.4);
@@ -34,21 +30,7 @@ h1{
 	margin: 0;
 }
 
-#message{	
-	font-family: Roboto;
-	margin: .5em 0;
-}
-
-#name{
-	height: 3.5em;
-	width: 18em;
-	border: 0;
-	background-color: rgb(195, 195, 195);
-	padding: 0 .5em;
-	margin: .5em 0;
-}
-
-#newGame, #joinGame{
+button{
 	height: 3.5em;
 	width: 19em;
 	border: 0;
@@ -60,4 +42,17 @@ h1{
 button:hover{
 	filter: grayscale(70%);
 	cursor: pointer;
+}
+
+input:focus::placeholder{
+	color: transparent;
+}
+
+input{
+	height: 3.5em;
+	width: 18em;
+	border: 0;
+	background-color: rgb(195, 195, 195);
+	padding: 0 .5em;
+	margin: .5em 0;
 }
