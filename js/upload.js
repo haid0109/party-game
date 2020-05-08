@@ -11,7 +11,7 @@ let finishedBtn = document.getElementById("finishedButton");
 let audioPlayer = document.getElementById("player");
 let effectButtons = document.getElementById("effectButtons")
 
-let correctAnswer = null;
+let correctAnswer = "";
 let audioSpeed = 1;
 let audioReverse = false;
 
@@ -210,14 +210,13 @@ uploadAudioBtn.addEventListener("click", async () => {
     finishedBtn.style.display = "block";
 });
 finishedBtn.addEventListener("click", () => {
-    fetch(`http://localhost:9423/game/player/ready/${gameCode}/`,
+    fetch(`http://localhost:9423/game/player/ready/${gameCode}/${secretKey}`,
     {
         method:"PUT",
     })
     .then((response) => {
-        if(response.status == 404){return alert("all players must be ready to start the game");}
-        window.location.href = "playerGuess.html" + window.location.search + "&round=1";
+        if(response.status != 200){return alert("something went wrong");}
+        window.location.href = "waitingRoom.html" + window.location.search;
     })
     .catch((error) => { console.error('Error:', error); });
-    window.location.href = "waitingRoom.html" + window.location.search;
 });

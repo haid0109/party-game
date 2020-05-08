@@ -25,6 +25,15 @@ async function checkIfRoundExist(){
     .catch((error) => {console.error('Error: ', error);});
 }
 
+async function checkIfLastRound(){
+    await fetch(`http://localhost:9423/game/round/last/${gameCode}`)
+    .then((resp) => {
+        if(resp.status == 200){lastRound = true;}
+        else if(resp.status == 404){alert("something went wrong!");}
+    })
+    .catch((error) => {console.error('Error: ', error);});
+}
+
 function getRoundResults(){
     fetch(`http://localhost:9423/game/round/results/${gameCode}/${secretKey}`)
     .then((resp) => {
@@ -44,15 +53,6 @@ function getRoundResults(){
     .catch((error) => {console.error('Error: ', error);});
 }
 
-function checkIfLastRound(){
-    fetch(`http://localhost:9423/game/round/last/${gameCode}`)
-    .then((resp) => {
-        if(resp.status == 200){lastRound = true;}
-        else if(resp.status == 404){alert("something went wrong!");}
-    })
-    .catch((error) => {console.error('Error: ', error);});
-}
-
 function nextPage(){
     if(lastRound){window.location.href = "gameResults.html" + window.location.search;}
 
@@ -61,7 +61,7 @@ function nextPage(){
         method:"PUT",
     })
     .then((resp) => {
-        if(resp.status == 200 || resp.status == 403){
+        if(resp.status == 200 || resp.status == 403 || resp.status == 400){
             let newRoundNum = roundNum;
             let UrlParams = new URLSearchParams(window.location.search);
             UrlParams.set("round", ++newRoundNum);
@@ -76,7 +76,7 @@ function nextPage(){
 window.addEventListener("load", async () => {
     await checkIfPlayerAndGameExist();
     await checkIfRoundExist();
+    await checkIfLastRound();
     getRoundResults();
-    checkIfLastRound();
 });
 document.getElementById("nextPage").addEventListener("click", nextPage);
